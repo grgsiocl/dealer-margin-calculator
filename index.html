@@ -33,6 +33,10 @@
   .calc-btn { width: 100%; background-color: #007aff; color: #ffffff; font-size: 17px; font-weight: 600; padding: 16px; border: none; border-radius: 12px; cursor: pointer; margin-top: 8px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); transition: transform 0.1s, background-color 0.2s; }
   .calc-btn:active { background-color: #0056b3; transform: scale(0.98); }
   
+  /* Contact Button */
+  .contact-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #6c6c70; text-decoration: none; padding: 10px 20px; border: 1px solid #e5e5ea; border-radius: 20px; transition: all 0.2s; background-color: #fafafa; font-weight: 500; }
+  .contact-btn:hover { background-color: #f2f2f7; color: #1c1c1e; border-color: #c6c6c8; }
+  
   /* Table Styles */
   table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; border-radius: 8px; overflow: hidden; border: 1px solid #e5e5ea; table-layout: fixed; background-color: #ffffff; }
   th, td { padding: 12px; word-wrap: break-word; }
@@ -90,6 +94,12 @@
     </div>
     
     <button id="btnCalculate" class="calc-btn" onclick="calculateMargin()">Calculate Margin</button>
+    
+    <div style="text-align: center; margin-bottom: 8px;">
+      <a href="mailto:PUT_YOUR_EMAIL_HERE@gmail.com?subject=Dealer Margin Calculator - Feedback" id="btnContact" class="contact-btn">
+        ✉️ Report Issue / Contact Us
+      </a>
+    </div>
   </div>
 
   <div id="result-container"></div>
@@ -110,6 +120,7 @@ const i18n = {
     lblRsp: "Selling Price (RSP)",
     lblInv: "Purchase Price (Inv)",
     btnCalc: "Calculate Margin",
+    btnContact: "✉️ Report Issue / Contact Us",
     colDetails: "Breakdown",
     colASite: "A-Site",
     colBSite: "B-Site",
@@ -132,6 +143,7 @@ const i18n = {
     lblRsp: "అమ్మకపు ధర (RSP)",
     lblInv: "కొనుగోలు ధర (Inv)",
     btnCalc: "మార్జిన్ లెక్కించు",
+    btnContact: "✉️ సమస్యను నివేదించండి / సంప్రదించండి",
     colDetails: "వివరాలు",
     colASite: "A-సైట్",
     colBSite: "B-సైట్",
@@ -163,6 +175,7 @@ function switchLanguage() {
   document.getElementById('lblHsdRsp').innerText = i18n[currentLang].lblRsp;
   document.getElementById('lblHsdInv').innerText = i18n[currentLang].lblInv;
   document.getElementById('btnCalculate').innerText = i18n[currentLang].btnCalc;
+  document.getElementById('btnContact').innerHTML = i18n[currentLang].btnContact;
   
   if (document.getElementById("result-container").innerHTML !== "") {
     calculateMargin();
@@ -229,7 +242,7 @@ function calculateMargin() {
 
   output += "</table>";
 
-  // Terminology Footer (MDG Note Removed)
+  // Terminology Footer
   output += "<div style='background-color: #f2f2f7; padding: 16px; border-radius: 12px; font-size: 12px; color: #6c6c70; line-height: 1.6; border: 1px solid #e5e5ea;'>";
   output += "<b style='color: #1c1c1e; font-size: 13px;'>" + t.txtGuideTitle + "</b><br>";
   output += t.txtGuide1 + "<br>";
