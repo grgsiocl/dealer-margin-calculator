@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="author" content="Kishore Kumar Maistry">
+
+<title>NET Dealer Margin Calculator</title>
+<style>
+  body { font-family: -apple-system, Helvetica, sans-serif; color: #1c1c1e; background-color: #f2f2f7; margin: 0; padding: 20px; }
+  .card { margin: 0 auto; width: 100%; max-width: 550px; background-color: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); box-sizing: border-box; }
+  
+  h3 { color: #007aff; margin-top: 0; margin-bottom: 20px; font-weight: 600; font-size: 20px; text-align: center; }
+  
+  /* Form Styles */
+  .form-group { margin-bottom: 16px; }
+  .form-row { display: flex; gap: 12px; margin-bottom: 16px; }
+  .form-col { flex: 1; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #495057; margin-bottom: 6px; }
+  input[type="number"] { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #c6c6c8; border-radius: 8px; box-sizing: border-box; background-color: #fafafa; }
+  input[type="number"]:focus { outline: none; border-color: #007aff; background-color: #ffffff; }
+  
+  button { width: 100%; background-color: #007aff; color: #ffffff; font-size: 16px; font-weight: 600; padding: 14px; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; margin-bottom: 24px; }
+  button:active { background-color: #0056b3; }
+  
+  /* Table Styles */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; border-radius: 8px; overflow: hidden; border: 1px solid #e5e5ea; table-layout: fixed; }
+  th, td { padding: 10px 12px; word-wrap: break-word; }
+  .nowrap { white-space: nowrap; }
+  
+  /* Print rules for PDF generation */
+  @media print {
+    body { background-color: #ffffff !important; padding: 0 !important; }
+    .card { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; border-radius: 0 !important; }
+    .no-print { display: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="no-print">
+    <h3>⛽️ NET Dealer Margin Calculator</h3>
+    
+    <div class="form-group">
+      <label style="color: #1c1c1e; font-size: 14px;">Petrol (MS)</label>
+      <div class="form-row">
+        <div class="form-col">
+          <label>RSP (₹)</label>
+          <input type="number" id="msRsp" placeholder="0.00" step="0.01">
+        </div>
+        <div class="form-col">
+          <label>Invoice (₹)</label>
+          <input type="number" id="msInvoice" placeholder="0.00" step="0.01">
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label style="color: #1c1c1e; font-size: 14px;">Diesel (HSD)</label>
+      <div class="form-row">
+        <div class="form-col">
+          <label>RSP (₹)</label>
+          <input type="number" id="hsdRsp" placeholder="0.00" step="0.01">
+        </div>
+        <div class="form-col">
+          <label>Invoice (₹)</label>
+          <input type="number" id="hsdInvoice" placeholder="0.00" step="0.01">
+        </div>
+      </div>
+    </div>
+    
+    <button onclick="calculateMargin()">Calculate Margin</button>
+  </div>
+
+  <div id="result-container"></div>
+  
+  <div style="text-align: center; margin-top: 16px; font-size: 10px; color: #d1d1d6; font-weight: 500; letter-spacing: 0.5px;">
+    Created by Kishore Kumar
+  </div>
+</div>
+
+<script>
+function calculateMargin() {
+  // Fetch values from the input fields
+  let msRsp = parseFloat(document.getElementById('msRsp').value) || 0;
+  let msInvoice = parseFloat(document.getElementById('msInvoice').value) || 0;
+  let hsdRsp = parseFloat(document.getElementById('hsdRsp').value) || 0;
+  let hsdInvoice = parseFloat(document.getElementById('hsdInvoice').value) || 0;
+
+  // FIXED CONSTANTS
+  const lfrA_ms = 0.52334;
+  const lfrB_ms = 0.23596;
+  const lfrA_hsd = 0.43610;
+  const lfrB_hsd = 0.19665;
+  const vdmA_ms = 0.46236;
+  const vdmB_ms = 0.37975;
+  const vdmA_hsd = 0.36392;
+  const vdmB_hsd = 0.28123;
+
+  // MS Calculations
+  let diffMs = msRsp - msInvoice;
+  let netDmA_ms = diffMs - lfrA_ms;
+  let netDmB_ms = diffMs - lfrB_ms;
+  let finalDmA_ms = netDmA_ms + vdmA_ms;
+  let finalDmB_ms = netDmB_ms + vdmB_ms;
+
+  // HSD Calculations
+  let diffHsd = hsdRsp - hsdInvoice;
+  let netDmA_hsd = diffHsd - lfrA_hsd;
+  let netDmB_hsd = diffHsd - lfrB_hsd;
+  let finalDmA_hsd = netDmA_hsd + vdmA_hsd;
+  let finalDmB_hsd = netDmB_hsd + vdmB_hsd;
+
+  // Smart Currency Formatter
+  function fmt(num) {
+      let val = Math.abs(num).toFixed(5);
+      return (num < 0 ? "-" : "") + "&#8377;" + val;
+  }
+
+  // Build the responsive, 3-column table
+  let output = "<table>";
+
+  // Header Row
+  output += "<tr><th style='width: 44%; background-color: #f2f2f7; text-align: left; border-bottom: 1px solid #c6c6c8;'>Details</th><th style='width: 28%; background-color: #e8f2ff; text-align: right; border-bottom: 1px solid #c6c6c8; color: #0040dd;'>A-Site</th><th style='width: 28%; background-color: #eaf8e6; text-align: right; border-bottom: 1px solid #c6c6c8; color: #2d7a17;'>B-Site</th></tr>";
+
+  // MS SECTION
+  output += "<tr><td colspan='3' style='background-color: #fafafa; border-bottom: 1px solid #e5e5ea; font-weight: 600; text-align: center; color: #1c1c1e;'>Petrol (MS)</td></tr>";
+  output += "<tr><td colspan='3' style='padding: 6px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>Inputs: RSP <b>&#8377;" + msRsp.toFixed(2) + "</b> | Invoice <b>&#8377;" + msInvoice.toFixed(2) + "</b></td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057;'>Gross Margin (RSP - Inv)</td><td colspan='2' class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: center; font-weight: bold; color: #1c1c1e;'>" + fmt(diffMs) + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #d70015;'>Less: LFR (Licence Fee)</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrA_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrB_ms).replace("-", "") + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 600;'>Net DM (After LFR)</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmA_ms) + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmB_ms) + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>Add: Variable DM (Returns)</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmA_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmB_ms).replace("-", "") + "</td></tr>";
+  output += "<tr><td style='background-color: #f2f2f7; font-weight: bold; color: #1c1c1e;'>Final Net Margin</td><td class='nowrap' style='background-color: #e8f2ff; text-align: right; font-weight: bold; color: #0040dd;'>" + fmt(finalDmA_ms) + "</td><td class='nowrap' style='background-color: #eaf8e6; text-align: right; font-weight: bold; color: #2d7a17;'>" + fmt(finalDmB_ms) + "</td></tr>";
+
+  // HSD SECTION
+  output += "<tr><td colspan='3' style='background-color: #fafafa; border-bottom: 1px solid #e5e5ea; border-top: 1px solid #c6c6c8; font-weight: 600; text-align: center; color: #1c1c1e;'>Diesel (HSD)</td></tr>";
+  output += "<tr><td colspan='3' style='padding: 6px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>Inputs: RSP <b>&#8377;" + hsdRsp.toFixed(2) + "</b> | Invoice <b>&#8377;" + hsdInvoice.toFixed(2) + "</b></td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057;'>Gross Margin (RSP - Inv)</td><td colspan='2' class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: center; font-weight: bold; color: #1c1c1e;'>" + fmt(diffHsd) + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #d70015;'>Less: LFR (Licence Fee)</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrA_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrB_hsd).replace("-", "") + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 600;'>Net DM (After LFR)</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmA_hsd) + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmB_hsd) + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>Add: Variable DM (Returns)</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmA_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmB_hsd).replace("-", "") + "</td></tr>";
+  output += "<tr><td style='background-color: #f2f2f7; font-weight: bold; color: #1c1c1e;'>Final Net Margin</td><td class='nowrap' style='background-color: #e8f2ff; text-align: right; font-weight: bold; color: #0040dd;'>" + fmt(finalDmA_hsd) + "</td><td class='nowrap' style='background-color: #eaf8e6; text-align: right; font-weight: bold; color: #2d7a17;'>" + fmt(finalDmB_hsd) + "</td></tr>";
+
+  output += "</table>";
+
+  // Compliance & Terminology Footer
+  output += "<div style='background-color: #f2f2f7; padding: 14px; border-radius: 8px; font-size: 12px; color: #6c6c70; line-height: 1.6;'>";
+  output += "<b style='color: #1c1c1e; font-size: 13px;'>Terminology Guide:</b><br>";
+  output += "• <b>MS:</b> Motor Spirit (Petrol) &nbsp;|&nbsp; <b>HSD:</b> High-Speed Diesel<br>";
+  output += "• <b>RSP:</b> Retail Selling Price &nbsp;|&nbsp; <b>Inv:</b> Invoice Price<br>";
+  output += "• <b>LFR:</b> Licence Fee Recovery &nbsp;|&nbsp; <b>DM:</b> Dealer Margin<br>";
+  output += "• <b>Variable DM:</b> Business Returns<br><br>";
+  output += "<b style='color: #1c1c1e;'>Note:</b> Margin logic adheres to prevailing OMCs Marketing Discipline Guidelines (MDG).";
+  output += "</div>";
+
+  // Display the output
+  document.getElementById("result-container").innerHTML = output;
+}
+</script>
+
+</body>
+</html>
