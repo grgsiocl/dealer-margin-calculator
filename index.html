@@ -6,12 +6,13 @@
 
 <meta name="author" content="Kishore Kumar Maistry">
 
-<title>NET Dealer Margin Calculator</title>
+<title>Dealer Margin Calculator</title>
 <style>
   body { font-family: -apple-system, Helvetica, sans-serif; color: #1c1c1e; background-color: #f2f2f7; margin: 0; padding: 20px; }
   .card { margin: 0 auto; width: 100%; max-width: 550px; background-color: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); box-sizing: border-box; position: relative; }
   
-  h3 { color: #007aff; margin-top: 0; margin-bottom: 20px; font-weight: 600; font-size: 20px; text-align: center; padding-top: 10px; }
+  h3 { color: #007aff; margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 20px; text-align: center; padding-top: 10px; }
+  .instruction-text { text-align: center; font-size: 13px; color: #6c6c70; margin-bottom: 20px; line-height: 1.4; padding: 0 10px; }
   
   /* Language Toggle Button */
   .lang-btn { position: absolute; top: 16px; right: 16px; background-color: #e5e5ea; color: #1c1c1e; border: none; border-radius: 12px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
@@ -48,7 +49,8 @@
   <button id="langToggle" class="lang-btn no-print" onclick="switchLanguage()">తెలుగు</button>
   
   <div class="no-print">
-    <h3 id="appTitle">⛽️ NET Dealer Margin Calculator</h3>
+    <h3 id="appTitle">⛽️ Dealer Margin Calculator</h3>
+    <div id="appInstruction" class="instruction-text">Please enter the Retail Selling Price (RSP) and Invoice values per liter.</div>
     
     <div class="form-group">
       <label id="lblPetrol" style="color: #1c1c1e; font-size: 14px;">Petrol (MS)</label>
@@ -92,7 +94,8 @@
 // Translation Dictionary
 const i18n = {
   en: {
-    appTitle: "⛽️ NET Dealer Margin Calculator",
+    appTitle: "⛽️ Dealer Margin Calculator",
+    appInstruction: "Please enter the Retail Selling Price (RSP) and Invoice values per liter.",
     lblPetrol: "Petrol (MS)",
     lblDiesel: "Diesel (HSD)",
     lblRsp: "RSP (₹)",
@@ -115,7 +118,8 @@ const i18n = {
     txtNote: "<b>Note:</b> Margin logic adheres to prevailing OMCs Marketing Discipline Guidelines (MDG)."
   },
   te: {
-    appTitle: "⛽️ నెట్ డీలర్ మార్జిన్ కాలిక్యులేటర్",
+    appTitle: "⛽️ డీలర్ మార్జిన్ కాలిక్యులేటర్",
+    appInstruction: "దయచేసి రిటైల్ విక్రయ ధర (RSP) మరియు ఇన్వాయిస్ విలువలను లీటరుకు నమోదు చేయండి.",
     lblPetrol: "పెట్రోల్ (MS)",
     lblDiesel: "డీజిల్ (HSD)",
     lblRsp: "RSP (₹)",
@@ -150,6 +154,7 @@ function switchLanguage() {
   
   // Update static form text
   document.getElementById('appTitle').innerText = i18n[currentLang].appTitle;
+  document.getElementById('appInstruction').innerText = i18n[currentLang].appInstruction;
   document.getElementById('lblPetrol').innerText = i18n[currentLang].lblPetrol;
   document.getElementById('lblMsRsp').innerText = i18n[currentLang].lblRsp;
   document.getElementById('lblMsInv').innerText = i18n[currentLang].lblInv;
