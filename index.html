@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -33,9 +33,12 @@
   .calc-btn { width: 100%; background-color: #007aff; color: #ffffff; font-size: 17px; font-weight: 600; padding: 16px; border: none; border-radius: 12px; cursor: pointer; margin-top: 8px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); transition: transform 0.1s, background-color 0.2s; }
   .calc-btn:active { background-color: #0056b3; transform: scale(0.98); }
   
-  /* Contact Button */
-  .contact-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #6c6c70; text-decoration: none; padding: 10px 20px; border: 1px solid #e5e5ea; border-radius: 20px; transition: all 0.2s; background-color: #fafafa; font-weight: 500; }
+  /* Secondary Buttons */
+  .contact-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; color: #6c6c70; text-decoration: none; padding: 12px 20px; border: 1px solid #e5e5ea; border-radius: 12px; transition: all 0.2s; background-color: #fafafa; font-weight: 600; cursor: pointer; width: 100%; box-sizing: border-box; margin-bottom: 12px; }
   .contact-btn:hover { background-color: #f2f2f7; color: #1c1c1e; border-color: #c6c6c8; }
+  
+  .print-btn { background-color: #e8f2ff; color: #007aff; border-color: #c6e0ff; }
+  .print-btn:hover { background-color: #c6e0ff; color: #0056b3; border-color: #007aff; }
   
   /* Table Styles */
   table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; border-radius: 8px; overflow: hidden; border: 1px solid #e5e5ea; table-layout: fixed; background-color: #ffffff; }
@@ -94,17 +97,21 @@
     </div>
     
     <button id="btnCalculate" class="calc-btn" onclick="calculateMargin()">Calculate Margin</button>
-    
-    <div style="text-align: center; margin-bottom: 8px;">
-      <a href="mailto:kishore.kumar.m@live.com?subject=Dealer Margin Calculator - Feedback" id="btnContact" class="contact-btn">
-        ✉️ Report Issue / Contact Us
-      </a>
-    </div>
   </div>
 
   <div id="result-container"></div>
   
-  <div style="text-align: center; margin-top: 24px; font-size: 11px; color: #c6c6c8; font-weight: 500; letter-spacing: 0.5px;">
+  <div class="no-print">
+    <button id="btnPrint" class="contact-btn print-btn" style="display: none;" onclick="window.print()">
+      🖨️ Print / Save PDF
+    </button>
+    
+    <a href="mailto:PUT_YOUR_EMAIL_HERE@gmail.com?subject=Dealer Margin Calculator - Feedback" id="btnContact" class="contact-btn">
+      ✉️ Report Issue / Contact Us
+    </a>
+  </div>
+  
+  <div style="text-align: center; margin-top: 16px; font-size: 11px; color: #c6c6c8; font-weight: 500; letter-spacing: 0.5px;">
     Created by Kishore Kumar
   </div>
 </div>
@@ -120,6 +127,7 @@ const i18n = {
     lblRsp: "Selling Price (RSP)",
     lblInv: "Purchase Price (Inv)",
     btnCalc: "Calculate Margin",
+    btnPrint: "🖨️ Print / Save PDF",
     btnContact: "✉️ Report Issue / Contact Us",
     colDetails: "Breakdown",
     colASite: "A-Site",
@@ -143,6 +151,7 @@ const i18n = {
     lblRsp: "అమ్మకపు ధర (RSP)",
     lblInv: "కొనుగోలు ధర (Inv)",
     btnCalc: "మార్జిన్ లెక్కించు",
+    btnPrint: "🖨️ ప్రింట్ / PDF సేవ్ చేయండి",
     btnContact: "✉️ సమస్యను నివేదించండి / సంప్రదించండి",
     colDetails: "వివరాలు",
     colASite: "A-సైట్",
@@ -175,6 +184,7 @@ function switchLanguage() {
   document.getElementById('lblHsdRsp').innerText = i18n[currentLang].lblRsp;
   document.getElementById('lblHsdInv').innerText = i18n[currentLang].lblInv;
   document.getElementById('btnCalculate').innerText = i18n[currentLang].btnCalc;
+  document.getElementById('btnPrint').innerHTML = i18n[currentLang].btnPrint;
   document.getElementById('btnContact').innerHTML = i18n[currentLang].btnContact;
   
   if (document.getElementById("result-container").innerHTML !== "") {
@@ -254,9 +264,12 @@ function calculateMargin() {
   const resultContainer = document.getElementById("result-container");
   resultContainer.innerHTML = output;
   
+  // Show the Print Button
+  document.getElementById("btnPrint").style.display = "inline-flex";
+  
   // Smooth scroll logic for better mobile UX
   setTimeout(() => {
-    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById("btnPrint").scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, 100);
 }
 </script>
