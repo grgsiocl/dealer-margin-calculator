@@ -3,103 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="author" content="Kishore Kumar Maistry">
-
 <title>Dealer Margin Calculator</title>
 <style>
-  body { font-family: -apple-system, Helvetica, sans-serif; color: #1c1c1e; background-color: #f2f2f7; margin: 0; padding: 20px; }
-  .card { margin: 0 auto; width: 100%; max-width: 600px; background-color: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); box-sizing: border-box; }
-  
-  /* Prominent Language Toggle */
-  .lang-toggle-container { display: flex; justify-content: center; margin-bottom: 20px; }
-  .lang-btn { background-color: #f2f2f7; color: #007aff; border: 1px solid #e5e5ea; border-radius: 20px; padding: 8px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-  .lang-btn:hover { background-color: #e8f2ff; border-color: #007aff; }
-  .lang-icon { font-size: 16px; }
-  
-  h3 { color: #007aff; margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 20px; text-align: center; }
-  .instruction-text { text-align: center; font-size: 13px; color: #6c6c70; margin-bottom: 24px; line-height: 1.5; padding: 0 10px; }
+  :root {
+    --primary: #007aff;
+    --primary-hover: #0056b3;
+    --bg-main: #f5f5f7;
+    --bg-card: #ffffff;
+    --text-main: #1d1d1f;
+    --text-muted: #86868b;
+    --border-color: #d2d2d7;
+    --success: #34c759;
+    --danger: #ff3b30;
+    --a-site-bg: #f0f8ff;
+    --b-site-bg: #f2fce8;
+  }
 
-  /* Form Styles */
-  .form-group { margin-bottom: 20px; background-color: #f9f9f9; padding: 16px; border-radius: 12px; border: 1px solid #e5e5ea; }
-  .form-row { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-  .form-col { flex: 1; min-width: 28%; }
-  label { display: block; font-size: 12px; font-weight: 600; color: #495057; margin-bottom: 6px; }
-  .section-title { color: #1c1c1e; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    color: var(--text-main); 
+    background-color: var(--bg-main); 
+    margin: 0; 
+    padding: 20px 15px; 
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { 
+    margin: 0 auto; 
+    width: 100%; 
+    max-width: 640px; 
+  }
+
+  .card { 
+    background-color: var(--bg-card); 
+    padding: 30px; 
+    border-radius: 18px; 
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04); 
+    margin-bottom: 20px;
+  }
   
-  input[type="number"] { width: 100%; padding: 10px; font-size: 15px; border: 1px solid #c6c6c8; border-radius: 8px; box-sizing: border-box; background-color: #ffffff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-  input[type="number"]:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); }
+  /* Header & Toggle */
+  .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .app-title { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
   
-  .calc-btn { width: 100%; background-color: #007aff; color: #ffffff; font-size: 17px; font-weight: 600; padding: 16px; border: none; border-radius: 12px; cursor: pointer; margin-top: 8px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); transition: transform 0.1s, background-color 0.2s; }
-  .calc-btn:active { background-color: #0056b3; transform: scale(0.98); }
+  .lang-btn { 
+    background-color: transparent; 
+    color: var(--primary); 
+    border: 1px solid var(--primary); 
+    border-radius: 14px; 
+    padding: 6px 14px; 
+    font-size: 13px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: 0.2s; 
+  }
+  .lang-btn:hover { background-color: var(--primary); color: #fff; }
+
+  p.instruction { font-size: 14px; color: var(--text-muted); margin-top: 0; margin-bottom: 24px; line-height: 1.5; }
+
+  /* Forms */
+  .fuel-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+  .fuel-section:last-of-type { border-bottom: none; padding-bottom: 0; }
   
-  /* Secondary Buttons */
-  .contact-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; color: #6c6c70; text-decoration: none; padding: 12px 20px; border: 1px solid #e5e5ea; border-radius: 12px; transition: all 0.2s; background-color: #fafafa; font-weight: 600; cursor: pointer; width: 100%; box-sizing: border-box; margin-bottom: 12px; }
-  .contact-btn:hover { background-color: #f2f2f7; color: #1c1c1e; border-color: #c6c6c8; }
+  .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
   
-  .print-btn { background-color: #e8f2ff; color: #007aff; border-color: #c6e0ff; }
-  .print-btn:hover { background-color: #c6e0ff; color: #0056b3; border-color: #007aff; }
+  .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
   
-  /* Table Styles */
-  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; border-radius: 8px; overflow: hidden; border: 1px solid #e5e5ea; table-layout: fixed; background-color: #ffffff; }
-  th, td { padding: 12px; word-wrap: break-word; }
-  .nowrap { white-space: nowrap; }
-  .highlight-row { border-top: 2px solid #1c1c1e; }
+  label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .optional-tag { font-weight: 400; text-transform: none; color: #a1a1a6; font-size: 11px; }
   
-  /* Print rules for PDF generation */
+  input[type="number"] { 
+    width: 100%; 
+    padding: 12px 14px; 
+    font-size: 16px; 
+    border: 1px solid var(--border-color); 
+    border-radius: 10px; 
+    background-color: #fafafa; 
+    box-sizing: border-box; 
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  input[type="number"]:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+
+  .calc-btn { 
+    width: 100%; 
+    background-color: var(--primary); 
+    color: #ffffff; 
+    font-size: 16px; 
+    font-weight: 600; 
+    padding: 16px; 
+    border: none; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    transition: transform 0.1s, background-color 0.2s; 
+  }
+  .calc-btn:active { transform: scale(0.98); }
+  .calc-btn:hover { background-color: var(--primary-hover); }
+
+  /* Results Table */
+  .result-wrapper { margin-top: 24px; overflow-x: auto; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+  th, td { padding: 14px 16px; text-align: right; border-bottom: 1px solid var(--border-color); }
+  th:first-child, td:first-child { text-align: left; }
+  th { background-color: #fafafa; font-weight: 600; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
+  tr:last-child td { border-bottom: none; }
+  
+  .site-a-col { background-color: var(--a-site-bg); }
+  .site-b-col { background-color: var(--b-site-bg); }
+  
+  .row-title { font-weight: 600; color: var(--text-main); }
+  .text-danger { color: var(--danger); }
+  .text-success { color: var(--success); }
+  .final-row td { font-size: 16px; font-weight: 700; background-color: #fafafa; }
+  
+  /* Static Slab Table */
+  .slab-table { margin-top: 24px; font-size: 13px; }
+  .slab-table th { background-color: #f5f5f7; border-bottom: 1px solid var(--border-color); }
+  .slab-table tr:nth-child(even) td { background-color: #fafafa; }
+  
+  .footer-links { text-align: center; margin-top: 20px; }
+  .footer-links a, .footer-links button { 
+    display: inline-block; 
+    background: none; 
+    border: none; 
+    color: var(--text-muted); 
+    font-size: 13px; 
+    text-decoration: none; 
+    cursor: pointer; 
+    margin: 0 10px; 
+  }
+  .footer-links a:hover, .footer-links button:hover { color: var(--text-main); }
+
   @media print {
-    body { background-color: #ffffff !important; padding: 0 !important; }
-    .card { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; border-radius: 0 !important; border: none !important; }
+    body { background-color: #fff; padding: 0; }
+    .card { box-shadow: none; border: none; padding: 0; margin: 0; }
     .no-print { display: none !important; }
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="lang-toggle-container no-print">
-    <button id="langToggle" class="lang-btn" onclick="switchLanguage()">
-      <span class="lang-icon">🌐</span> <span id="langBtnText">తెలుగు</span>
-    </button>
-  </div>
-  
-  <div class="no-print">
-    <h3 id="appTitle">⛽️ Dealer Margin Calculator</h3>
-    <div id="appInstruction" class="instruction-text">Enter the Selling Price, Purchase Price, and Volumes. The calculator will dynamically break down your exact profit.</div>
+<div class="container">
+  <div class="card no-print">
+    <div class="header-actions">
+      <h1 class="app-title" id="appTitle">Dealer Margin Calculator</h1>
+      <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
+    </div>
     
-    <div class="form-group">
+    <p class="instruction" id="appInstruction">Enter prices to find your base net margin. Optionally, add your previous month's volume to calculate your exact final margin including dynamic incentives.</p>
+    
+    <div class="fuel-section">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
-      <div class="form-row">
-        <div class="form-col">
-          <label id="lblMsRsp">RSP</label>
-          <input type="number" id="msRsp" placeholder="e.g. 109.91" step="0.01">
+      <div class="input-grid">
+        <div class="input-group">
+          <label id="lblMsRsp">Selling Price (RSP)</label>
+          <input type="number" id="msRsp" placeholder="0.00" step="0.01">
         </div>
-        <div class="form-col">
-          <label id="lblMsInv">Invoice</label>
-          <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
+        <div class="input-group">
+          <label id="lblMsInv">Invoice Price</label>
+          <input type="number" id="msInvoice" placeholder="0.00" step="0.01">
         </div>
-        <div class="form-col">
-          <label id="lblMsVol">Volume (KL)</label>
-          <input type="number" id="msVol" placeholder="e.g. 70" step="1">
+        <div class="input-group">
+          <label id="lblMsVol">Prev. Month Vol (KL) <span class="optional-tag">- Optional</span></label>
+          <input type="number" id="msVol" placeholder="0" step="1">
         </div>
       </div>
     </div>
     
-    <div class="form-group">
+    <div class="fuel-section">
       <div class="section-title" id="lblDiesel">🚛 Diesel (HSD)</div>
-      <div class="form-row">
-        <div class="form-col">
-          <label id="lblHsdRsp">RSP</label>
-          <input type="number" id="hsdRsp" placeholder="e.g. 97.73" step="0.01">
+      <div class="input-grid">
+        <div class="input-group">
+          <label id="lblHsdRsp">Selling Price (RSP)</label>
+          <input type="number" id="hsdRsp" placeholder="0.00" step="0.01">
         </div>
-        <div class="form-col">
-          <label id="lblHsdInv">Invoice</label>
-          <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
+        <div class="input-group">
+          <label id="lblHsdInv">Invoice Price</label>
+          <input type="number" id="hsdInvoice" placeholder="0.00" step="0.01">
         </div>
-        <div class="form-col">
-          <label id="lblHsdVol">Volume (KL)</label>
-          <input type="number" id="hsdVol" placeholder="e.g. 270" step="1">
+        <div class="input-group">
+          <label id="lblHsdVol">Prev. Month Vol (KL) <span class="optional-tag">- Optional</span></label>
+          <input type="number" id="hsdVol" placeholder="0" step="1">
         </div>
       </div>
     </div>
@@ -109,73 +194,61 @@
 
   <div id="result-container"></div>
   
-  <div class="no-print">
-    <button id="btnPrint" class="contact-btn print-btn" style="display: none;" onclick="window.print()">
-      🖨️ Print / Save PDF
-    </button>
-    
-    <a href="mailto:kishore.kumar.m@live.com?subject=Dealer Margin Calculator - Feedback" id="btnContact" class="contact-btn">
-      ✉️ Report Issue / Contact Us
-    </a>
-  </div>
-  
-  <div style="text-align: center; margin-top: 16px; font-size: 11px; color: #c6c6c8; font-weight: 500; letter-spacing: 0.5px;">
-    Created by Kishore Kumar
+  <div class="footer-links no-print">
+    <button id="btnPrint" style="display: none;" onclick="window.print()">🖨️ Print Report</button>
+    <a href="mailto:kishore.kumar.m@live.com?subject=Dealer Margin Calculator">✉️ Report Issue</a>
   </div>
 </div>
 
 <script>
-// Translation Dictionary
 const i18n = {
   en: {
-    appTitle: "⛽️ Dealer Margin Calculator",
-    appInstruction: "Enter the Selling Price, Purchase Price, and Volumes. The calculator will dynamically break down your exact profit.",
+    appTitle: "Dealer Margin Calculator",
+    appInstruction: "Enter prices to find your base net margin. Optionally, add your previous month's volume to calculate your exact final margin including dynamic incentives.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
-    lblRsp: "RSP",
-    lblInv: "Invoice",
-    lblVol: "Volume (KL)",
+    lblRsp: "Selling Price (RSP)",
+    lblInv: "Invoice Price",
+    lblVol: "Prev. Month Vol (KL) <span class='optional-tag'>- Optional</span>",
     btnCalc: "Calculate Margin",
-    btnPrint: "🖨️ Print / Save PDF",
-    btnContact: "✉️ Report Issue / Contact Us",
-    colDetails: "Breakdown",
+    colDetails: "Breakdown Per Liter",
     colASite: "A-Site",
     colBSite: "B-Site",
-    txtInputs: "Your Inputs",
-    txtGross: "💰 Base Profit (RSP - Inv)",
-    txtLessLfr: "➖ OMC Fee (LFR Deduction)",
-    txtNetDm: "🟰 Net Margin",
-    txtAddVdm: "➕ Extra Returns (Dynamic VDM)",
-    txtFinal: "🏆 Final Margin Per Litre<br><span style='font-size: 11px; font-weight: normal; color: #6c6c70;'>After all deductions & incentives offset</span>",
-    txtGuideTitle: "Terminology Guide:",
-    txtGuide1: "• <b>MS:</b> Motor Spirit (Petrol) &nbsp;|&nbsp; <b>HSD:</b> High-Speed Diesel",
-    txtGuide2: "• <b>RSP:</b> Retail Selling Price &nbsp;|&nbsp; <b>Inv:</b> Invoice Price",
-    txtGuide3: "• <b>LFR:</b> OMC Licence Fee &nbsp;|&nbsp; <b>Dynamic VDM:</b> Additional Business Returns per liter based on volume"
+    txtGross: "Base Profit (RSP - Inv)",
+    txtLfr: "OMC LFR Deduction",
+    txtNet: "Base Net Margin",
+    txtVdm: "Dynamic Incentive (VDM)",
+    txtFinal: "Final Total Margin",
+    msgNoVol: "Volume not provided. Showing base net margin.",
+    msgVol: "Dynamic VDM included based on combined volume of",
+    lblSlabTitle: "Reference: Additional Margin Slabs (If volume not entered)",
+    lblSlabVol: "Combined Volume (KL)",
+    lblSlabMs: "MS Bonus / Liter",
+    lblSlabHsd: "HSD Bonus / Liter"
   },
   te: {
-    appTitle: "⛽️ డీలర్ మార్జిన్ కాలిక్యులేటర్",
-    appInstruction: "దయచేసి లీటరుకు అమ్మకపు ధర (RSP), కొనుగోలు ధర (Invoice) మరియు వాల్యూమ్ నమోదు చేయండి.",
+    appTitle: "డీలర్ మార్జిన్ కాలిక్యులేటర్",
+    appInstruction: "మీ నెట్ మార్జిన్ తెలుసుకోవడానికి ధరలను నమోదు చేయండి. డైనమిక్ ఇన్సెంటివ్‌లతో సహా మీ ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి, గత నెల వాల్యూమ్‌ను కూడా నమోదు చేయండి (ఇది ఐచ్ఛికం).",
     lblPetrol: "🚗 పెట్రోల్ (MS)",
     lblDiesel: "🚛 డీజిల్ (HSD)",
-    lblRsp: "RSP",
-    lblInv: "కొనుగోలు (Inv)",
-    lblVol: "వాల్యూమ్ (KL)",
+    lblRsp: "అమ్మకపు ధర (RSP)",
+    lblInv: "ఇన్వాయిస్ ధర",
+    lblVol: "గత నెల వాల్యూమ్ (KL) <span class='optional-tag'>- ఐచ్ఛికం</span>",
     btnCalc: "మార్జిన్ లెక్కించు",
-    btnPrint: "🖨️ ప్రింట్ / PDF సేవ్ చేయండి",
-    btnContact: "✉️ సమస్యను నివేదించండి / సంప్రదించండి",
-    colDetails: "వివరాలు",
+    colDetails: "లీటరుకు వివరాలు",
     colASite: "A-సైట్",
     colBSite: "B-సైట్",
-    txtInputs: "మీరు నమోదు చేసిన ధరలు",
-    txtGross: "💰 సాధారణ లాభం (RSP - Inv)",
-    txtLessLfr: "➖ OMC ఫీజు (LFR తగ్గింపు)",
-    txtNetDm: "🟰 నెట్ మార్జిన్",
-    txtAddVdm: "➕ అదనపు రాబడి (Dynamic VDM)",
-    txtFinal: "🏆 తుది మార్జిన్ (లీటరుకు)<br><span style='font-size: 11px; font-weight: normal; color: #6c6c70;'>అన్ని మినహాయింపులు & ఇన్సెంటివ్‌ల తర్వాత డీలర్‌కు వచ్చేది</span>",
-    txtGuideTitle: "పదకోశం:",
-    txtGuide1: "• <b>MS:</b> పెట్రోల్ &nbsp;|&nbsp; <b>HSD:</b> డీజిల్",
-    txtGuide2: "• <b>RSP:</b> రిటైల్ విక్రయ ధర &nbsp;|&nbsp; <b>Inv:</b> ఇన్వాయిస్ ధర",
-    txtGuide3: "• <b>LFR:</b> లైసెన్స్ ఫీజు &nbsp;|&nbsp; <b>Dynamic VDM:</b> వాల్యూమ్ ఆధారంగా అదనపు రాబడి"
+    txtGross: "సాధారణ లాభం (RSP - Inv)",
+    txtLfr: "LFR తగ్గింపు",
+    txtNet: "బేస్ నెట్ మార్జిన్",
+    txtVdm: "డైనమిక్ ఇన్సెంటివ్ (VDM)",
+    txtFinal: "తుది మార్జిన్",
+    msgNoVol: "వాల్యూమ్ ఇవ్వబడలేదు. బేస్ నెట్ మార్జిన్ మాత్రమే చూపబడింది.",
+    msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా డైనమిక్ VDM జోడించబడింది:",
+    lblSlabTitle: "రిఫరెన్స్: అదనపు మార్జిన్ స్లాబ్‌లు",
+    lblSlabVol: "మొత్తం వాల్యూమ్ (KL)",
+    lblSlabMs: "MS బోనస్ / లీటరుకు",
+    lblSlabHsd: "HSD బోనస్ / లీటరుకు"
   }
 };
 
@@ -183,21 +256,19 @@ let currentLang = 'en';
 
 function switchLanguage() {
   currentLang = currentLang === 'en' ? 'te' : 'en';
+  const t = i18n[currentLang];
   
-  document.getElementById('langBtnText').innerText = currentLang === 'en' ? 'తెలుగు' : 'English';
-  document.getElementById('appTitle').innerText = i18n[currentLang].appTitle;
-  document.getElementById('appInstruction').innerText = i18n[currentLang].appInstruction;
-  document.getElementById('lblPetrol').innerText = i18n[currentLang].lblPetrol;
-  document.getElementById('lblMsRsp').innerText = i18n[currentLang].lblRsp;
-  document.getElementById('lblMsInv').innerText = i18n[currentLang].lblInv;
-  document.getElementById('lblMsVol').innerText = i18n[currentLang].lblVol;
-  document.getElementById('lblDiesel').innerText = i18n[currentLang].lblDiesel;
-  document.getElementById('lblHsdRsp').innerText = i18n[currentLang].lblRsp;
-  document.getElementById('lblHsdInv').innerText = i18n[currentLang].lblInv;
-  document.getElementById('lblHsdVol').innerText = i18n[currentLang].lblVol;
-  document.getElementById('btnCalculate').innerText = i18n[currentLang].btnCalc;
-  document.getElementById('btnPrint').innerHTML = i18n[currentLang].btnPrint;
-  document.getElementById('btnContact').innerHTML = i18n[currentLang].btnContact;
+  document.getElementById('langToggle').innerText = currentLang === 'en' ? 'తెలుగు' : 'English';
+  document.getElementById('appTitle').innerText = t.appTitle;
+  document.getElementById('appInstruction').innerText = t.appInstruction;
+  document.getElementById('lblPetrol').innerText = t.lblPetrol;
+  document.getElementById('lblDiesel').innerText = t.lblDiesel;
+  
+  document.querySelectorAll('#lblMsRsp, #lblHsdRsp').forEach(el => el.innerHTML = t.lblRsp);
+  document.querySelectorAll('#lblMsInv, #lblHsdInv').forEach(el => el.innerHTML = t.lblInv);
+  document.querySelectorAll('#lblMsVol, #lblHsdVol').forEach(el => el.innerHTML = t.lblVol);
+  
+  document.getElementById('btnCalculate').innerText = t.btnCalc;
   
   if (document.getElementById("result-container").innerHTML !== "") {
     calculateMargin();
@@ -206,38 +277,34 @@ function switchLanguage() {
 
 function calculateMargin() {
   let msRsp = parseFloat(document.getElementById('msRsp').value) || 0;
-  let msInvoice = parseFloat(document.getElementById('msInvoice').value) || 0;
+  let msInv = parseFloat(document.getElementById('msInvoice').value) || 0;
   let msVol = parseFloat(document.getElementById('msVol').value) || 0;
   
   let hsdRsp = parseFloat(document.getElementById('hsdRsp').value) || 0;
-  let hsdInvoice = parseFloat(document.getElementById('hsdInvoice').value) || 0;
+  let hsdInv = parseFloat(document.getElementById('hsdInvoice').value) || 0;
   let hsdVol = parseFloat(document.getElementById('hsdVol').value) || 0;
 
   let totalVol = msVol + hsdVol;
+  let hasVolume = totalVol > 0;
 
-  // Exact LFR Rates converting to per litre
   const lfrA_ms = (443.50 * 1.18) / 1000;
   const lfrA_hsd = (369.58 * 1.18) / 1000;
   const lfrB_ms = (235.96 * 1.28) / 1000;
   const lfrB_hsd = (196.65 * 1.28) / 1000;
 
-  // Base Margins
-  let diffMs = msRsp - msInvoice;
-  let diffHsd = hsdRsp - hsdInvoice;
+  let diffMs = msRsp - msInv;
+  let diffHsd = hsdRsp - hsdInv;
 
-  // Dynamic Variable Dealer Margin (VDM) Calculation
   let vdm_ms = 0;
   let vdm_hsd = 0;
 
-  if (totalVol > 0) {
-    // 1. Business Return Slabs
+  if (hasVolume) {
     const baseMS = msVol * 201.76;
     const baseHSD = hsdVol * 149.46;
     const baseTotal = baseMS + baseHSD;
     let totalBR = baseTotal;
 
-    if (totalVol < 12) totalBR = baseTotal;
-    else if (totalVol <= 25) totalBR = Math.max(12000, baseTotal);
+    if (totalVol <= 25) totalBR = Math.max(12000, baseTotal);
     else if (totalVol <= 50) totalBR = Math.max(20000, baseTotal);
     else if (totalVol <= 100) totalBR = Math.max(24000, baseTotal);
     else if (totalVol <= 150) totalBR = Math.max(26000, baseTotal);
@@ -246,105 +313,84 @@ function calculateMargin() {
     let br_ms = baseTotal > 0 ? (totalBR * (baseMS / baseTotal)) : 0;
     let br_hsd = baseTotal > 0 ? (totalBR * (baseHSD / baseTotal)) : 0;
 
-    // 2. Additional Manpower & Business Returns Slabs
     let slab_ms = 0, slab_hsd = 0;
     const slabs = [
-      { limit: 400, ms: 379.67, hsd: 281.23 },
-      { limit: 600, ms: 340.19, hsd: 251.99 },
-      { limit: 800, ms: 300.72, hsd: 222.75 },
-      { limit: 1000, ms: 261.24, hsd: 193.51 },
-      { limit: 1200, ms: 221.77, hsd: 164.27 },
-      { limit: 1400, ms: 182.29, hsd: 135.03 },
-      { limit: 1600, ms: 142.82, hsd: 105.79 },
-      { limit: 1800, ms: 103.34, hsd: 76.55 },
-      { limit: 2000, ms: 78.95, hsd: 58.48 },
-      { limit: 2200, ms: 52.63, hsd: 38.99 },
-      { limit: 2400, ms: 39.47, hsd: 29.24 },
-      { limit: 2600, ms: 26.32, hsd: 19.49 },
-      { limit: 2800, ms: 13.16, hsd: 9.75 },
-      { limit: Infinity, ms: 0, hsd: 0 }
+      { limit: 400, ms: 379.67, hsd: 281.23 }, { limit: 600, ms: 340.19, hsd: 251.99 },
+      { limit: 800, ms: 300.72, hsd: 222.75 }, { limit: 1000, ms: 261.24, hsd: 193.51 },
+      { limit: 1200, ms: 221.77, hsd: 164.27 }, { limit: 1400, ms: 182.29, hsd: 135.03 },
+      { limit: 1600, ms: 142.82, hsd: 105.79 }, { limit: 1800, ms: 103.34, hsd: 76.55 },
+      { limit: 2000, ms: 78.95, hsd: 58.48 }, { limit: 2200, ms: 52.63, hsd: 38.99 },
+      { limit: 2400, ms: 39.47, hsd: 29.24 }, { limit: 2600, ms: 26.32, hsd: 19.49 },
+      { limit: 2800, ms: 13.16, hsd: 9.75 }, { limit: Infinity, ms: 0, hsd: 0 }
     ];
 
     for (let slab of slabs) {
-      if (totalVol <= slab.limit) {
-        slab_ms = slab.ms;
-        slab_hsd = slab.hsd;
-        break;
-      }
+      if (totalVol <= slab.limit) { slab_ms = slab.ms; slab_hsd = slab.hsd; break; }
     }
 
-    let add_ms = msVol * slab_ms;
-    let add_hsd = hsdVol * slab_hsd;
-
-    // Convert to Per Liter
-    if (msVol > 0) vdm_ms = (br_ms + add_ms) / (msVol * 1000);
-    if (hsdVol > 0) vdm_hsd = (br_hsd + add_hsd) / (hsdVol * 1000);
-  } else {
-    // Fallback if volumes are omitted
-    vdm_ms = 201.76 / 1000;
-    vdm_hsd = 149.46 / 1000;
+    if (msVol > 0) vdm_ms = (br_ms + (msVol * slab_ms)) / (msVol * 1000);
+    if (hsdVol > 0) vdm_hsd = (br_hsd + (hsdVol * slab_hsd)) / (hsdVol * 1000);
   }
 
-  // Final Calculations for the Table
-  let netDmA_ms = diffMs - lfrA_ms;
-  let netDmB_ms = diffMs - lfrB_ms;
-  let finalDmA_ms = netDmA_ms + vdm_ms;
-  let finalDmB_ms = netDmB_ms + vdm_ms;
-
-  let netDmA_hsd = diffHsd - lfrA_hsd;
-  let netDmB_hsd = diffHsd - lfrB_hsd;
-  let finalDmA_hsd = netDmA_hsd + vdm_hsd;
-  let finalDmB_hsd = netDmB_hsd + vdm_hsd;
-
   function fmt(num) {
-      let val = Math.abs(num).toFixed(5);
-      return (num < 0 ? "-" : "") + "&#8377;" + val;
+    return (num < 0 ? "-" : "") + "₹" + Math.abs(num).toFixed(4);
   }
 
   const t = i18n[currentLang];
+  const volMsg = hasVolume ? `${t.msgVol} <b>${totalVol} KL</b>` : t.msgNoVol;
 
-  let output = "<table>";
-  output += "<tr><th style='width: 44%; background-color: #f2f2f7; text-align: left; border-bottom: 1px solid #c6c6c8; font-size: 14px;'>" + t.colDetails + "</th><th style='width: 28%; background-color: #e8f2ff; text-align: right; border-bottom: 1px solid #c6c6c8; color: #0040dd;'>" + t.colASite + "</th><th style='width: 28%; background-color: #eaf8e6; text-align: right; border-bottom: 1px solid #c6c6c8; color: #2d7a17;'>" + t.colBSite + "</th></tr>";
+  let html = `<div class="card result-wrapper">
+    <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 0;">${volMsg}</p>
+    <table>
+      <tr>
+        <th>${t.colDetails}</th>
+        <th style="color: #0056b3;" class="site-a-col">${t.colASite}</th>
+        <th style="color: #2d7a17;" class="site-b-col">${t.colBSite}</th>
+      </tr>`;
 
-  // --- MS SECTION ---
-  output += "<tr><td colspan='3' style='background-color: #fafafa; border-bottom: 1px solid #e5e5ea; font-weight: 700; text-align: center; color: #1c1c1e; font-size: 15px;'>🚗 " + t.lblPetrol.replace('🚗 ', '') + "</td></tr>";
-  output += "<tr><td colspan='3' style='padding: 8px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>" + t.txtInputs + ": RSP <b>&#8377;" + msRsp.toFixed(2) + "</b> &nbsp;|&nbsp; Inv <b>&#8377;" + msInvoice.toFixed(2) + "</b> &nbsp;|&nbsp; Vol <b>" + msVol + " KL</b></td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 500;'>" + t.txtGross + "</td><td colspan='2' class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: center; font-weight: bold; color: #1c1c1e;'>" + fmt(diffMs) + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #d70015;'>" + t.txtLessLfr + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrA_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrB_ms).replace("-", "") + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 600;'>" + t.txtNetDm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmA_ms) + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmB_ms) + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>" + t.txtAddVdm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_ms).replace("-", "") + "</td></tr>";
-  output += "<tr class='highlight-row'><td style='background-color: #f2f2f7; font-weight: bold; color: #1c1c1e; font-size: 14px; padding-top: 16px; padding-bottom: 16px;'>" + t.txtFinal + "</td><td class='nowrap' style='background-color: #e8f2ff; text-align: right; font-weight: bold; color: #0040dd; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmA_ms) + "</td><td class='nowrap' style='background-color: #eaf8e6; text-align: right; font-weight: bold; color: #2d7a17; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmB_ms) + "</td></tr>";
-
-  // --- HSD SECTION ---
-  output += "<tr><td colspan='3' style='background-color: #fafafa; border-bottom: 1px solid #e5e5ea; border-top: 8px solid #f2f2f7; font-weight: 700; text-align: center; color: #1c1c1e; font-size: 15px;'>🚛 " + t.lblDiesel.replace('🚛 ', '') + "</td></tr>";
-  output += "<tr><td colspan='3' style='padding: 8px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>" + t.txtInputs + ": RSP <b>&#8377;" + hsdRsp.toFixed(2) + "</b> &nbsp;|&nbsp; Inv <b>&#8377;" + hsdInvoice.toFixed(2) + "</b> &nbsp;|&nbsp; Vol <b>" + hsdVol + " KL</b></td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 500;'>" + t.txtGross + "</td><td colspan='2' class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: center; font-weight: bold; color: #1c1c1e;'>" + fmt(diffHsd) + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #d70015;'>" + t.txtLessLfr + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrA_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrB_hsd).replace("-", "") + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 600;'>" + t.txtNetDm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmA_hsd) + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmB_hsd) + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>" + t.txtAddVdm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_hsd).replace("-", "") + "</td></tr>";
-  output += "<tr class='highlight-row'><td style='background-color: #f2f2f7; font-weight: bold; color: #1c1c1e; font-size: 14px; padding-top: 16px; padding-bottom: 16px;'>" + t.txtFinal + "</td><td class='nowrap' style='background-color: #e8f2ff; text-align: right; font-weight: bold; color: #0040dd; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmA_hsd) + "</td><td class='nowrap' style='background-color: #eaf8e6; text-align: right; font-weight: bold; color: #2d7a17; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmB_hsd) + "</td></tr>";
-
-  output += "</table>";
-
-  // Terminology Footer
-  output += "<div style='background-color: #f2f2f7; padding: 16px; border-radius: 12px; font-size: 12px; color: #6c6c70; line-height: 1.6; border: 1px solid #e5e5ea;'>";
-  output += "<b style='color: #1c1c1e; font-size: 13px;'>" + t.txtGuideTitle + "</b><br>";
-  output += t.txtGuide1 + "<br>";
-  output += t.txtGuide2 + "<br>";
-  output += t.txtGuide3;
-  output += "</div>";
-
-  // Display the output and auto-scroll to it
-  const resultContainer = document.getElementById("result-container");
-  resultContainer.innerHTML = output;
+  // MS Rows
+  html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700;">🚗 MS (Petrol)</td></tr>`;
+  html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffMs)}</td><td>${fmt(diffMs)}</td></tr>`;
+  html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_ms).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_ms).replace('-','')}</td></tr>`;
+  html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(diffMs - lfrA_ms)}</td><td style="font-weight: 600;">${fmt(diffMs - lfrB_ms)}</td></tr>`;
   
-  // Show the Print Button
-  document.getElementById("btnPrint").style.display = "inline-flex";
+  if (hasVolume) {
+    html += `<tr><td class="row-title text-success">${t.txtVdm}</td><td class="text-success">+${fmt(vdm_ms).replace('-','')}</td><td class="text-success">+${fmt(vdm_ms).replace('-','')}</td></tr>`;
+    html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffMs - lfrA_ms + vdm_ms)}</td><td style="color: #2d7a17;">${fmt(diffMs - lfrB_ms + vdm_ms)}</td></tr>`;
+  }
+
+  // HSD Rows
+  html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700; border-top: 4px solid var(--bg-main);">🚛 HSD (Diesel)</td></tr>`;
+  html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffHsd)}</td><td>${fmt(diffHsd)}</td></tr>`;
+  html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_hsd).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_hsd).replace('-','')}</td></tr>`;
+  html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(diffHsd - lfrA_hsd)}</td><td style="font-weight: 600;">${fmt(diffHsd - lfrB_hsd)}</td></tr>`;
   
-  // Smooth scroll logic for better mobile UX
-  setTimeout(() => {
-    document.getElementById("btnPrint").scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, 100);
+  if (hasVolume) {
+    html += `<tr><td class="row-title text-success">${t.txtVdm}</td><td class="text-success">+${fmt(vdm_hsd).replace('-','')}</td><td class="text-success">+${fmt(vdm_hsd).replace('-','')}</td></tr>`;
+    html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffHsd - lfrA_hsd + vdm_hsd)}</td><td style="color: #2d7a17;">${fmt(diffHsd - lfrB_hsd + vdm_hsd)}</td></tr>`;
+  }
+  
+  html += `</table></div>`;
+
+  // Static Slabs Table (Shows only if volume is omitted)
+  if (!hasVolume) {
+    html += `<div class="card slab-table no-print">
+      <div class="section-title">${t.lblSlabTitle}</div>
+      <table>
+        <tr><th>${t.lblSlabVol}</th><th style="text-align: center;">${t.lblSlabMs}</th><th style="text-align: center;">${t.lblSlabHsd}</th></tr>
+        <tr><td>Up to 400 KL</td><td style="text-align: center;">₹0.3796</td><td style="text-align: center;">₹0.2812</td></tr>
+        <tr><td>401 to 600 KL</td><td style="text-align: center;">₹0.3401</td><td style="text-align: center;">₹0.2519</td></tr>
+        <tr><td>601 to 800 KL</td><td style="text-align: center;">₹0.3007</td><td style="text-align: center;">₹0.2227</td></tr>
+        <tr><td>801 to 1000 KL</td><td style="text-align: center;">₹0.2612</td><td style="text-align: center;">₹0.1935</td></tr>
+        <tr><td>1001 to 1200 KL</td><td style="text-align: center;">₹0.2217</td><td style="text-align: center;">₹0.1642</td></tr>
+        <tr><td>1201 to 1400 KL</td><td style="text-align: center;">₹0.1822</td><td style="text-align: center;">₹0.1350</td></tr>
+      </table>
+      <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Note: Base Business Return lump sums also apply depending on volume.</p>
+    </div>`;
+  }
+
+  document.getElementById("result-container").innerHTML = html;
+  document.getElementById("btnPrint").style.display = "inline-block";
 }
 </script>
 
