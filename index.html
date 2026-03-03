@@ -272,13 +272,13 @@ const i18n = {
     txtLfr: "OMC LFR Deduction",
     txtNet: "Invoice Net Margin",
     txtProt: "Margin Protection Shortfall",
-    txtVar: "Variable Margin (0.870% / 0.266%)",
+    txtVar: "Variable Margin",
     txtBr: "Business Return (Shortfall)",
     txtMp: "Manpower Return",
     txtFinal: "Final Total Margin",
     txtCn: "Expected Credit Note (Rs)",
     msgNoVol: "Volume omitted. Showing guaranteed base return.",
-    msgVol: "Dynamic returns & protection calculated for combined volume of",
+    msgVol: "Dynamic returns calculated for combined volume of",
     lblSlabTitle: "Reference: Margin Slabs & Fixed Rates (1-Dec-24)",
     txtEnterVol: "Enter Vol"
   },
@@ -345,11 +345,11 @@ function calculateMargin() {
 
   let totalVol = msVol + hsdVol;
 
-  // New LFR logic incorporating correct base rates before GST
+  // Updated LFR logic: uniform 18% GST across both A and B sites
   const lfrA_ms = (443.50 * 1.18) / 1000;
   const lfrA_hsd = (369.58 * 1.18) / 1000;
-  const lfrB_ms = (184.34 * 1.28) / 1000;
-  const lfrB_hsd = (153.62 * 1.28) / 1000;
+  const lfrB_ms = (235.96 * 1.18) / 1000;
+  const lfrB_hsd = (196.65 * 1.18) / 1000;
 
   // Internal Billable Prices derived for background Variable Margin Calculation
   const msBillPrice = 15595.40;
@@ -377,7 +377,7 @@ function calculateMargin() {
   let protA_hsd_pl = 0;
   let protB_hsd_pl = 0;
 
-  // New Variable Margin calculation (1-Dec-24)
+  // Variable Margin calculation (1-Dec-24)
   let var_ms_pl = (msBillPrice * 0.00870) / 1000;
   let var_hsd_pl = (hsdBillPrice * 0.00266) / 1000;
 
