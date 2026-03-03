@@ -43,7 +43,6 @@
     margin-bottom: 20px;
   }
   
-  /* Header & Toggle */
   .header-actions { 
     position: relative; 
     display: flex; 
@@ -77,27 +76,25 @@
 
   p.instruction { font-size: 14px; color: var(--text-muted); margin-top: 0; margin-bottom: 24px; line-height: 1.5; text-align: center; }
 
-  /* Forms */
   .fuel-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
   .fuel-section:last-of-type { border-bottom: none; padding-bottom: 0; }
   
   .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
   
-  .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   
-  /* Responsive Breakpoint for Mobile Inputs */
   @media (max-width: 500px) {
       .input-grid { grid-template-columns: 1fr; }
   }
 
   .input-group { display: flex; flex-direction: column; gap: 6px; }
   
-  label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
-  .optional-tag { font-weight: 400; text-transform: none; color: #a1a1a6; font-size: 11px; }
+  label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; }
+  .optional-tag { font-weight: 400; text-transform: none; color: #a1a1a6; font-size: 10px; display: block; }
   
   input[type="number"] { 
     width: 100%; 
-    padding: 12px 14px; 
+    padding: 12px; 
     font-size: 16px; 
     border: 1px solid var(--border-color); 
     border-radius: 10px; 
@@ -123,12 +120,11 @@
   .calc-btn:active { transform: scale(0.98); }
   .calc-btn:hover { background-color: var(--primary-hover); }
 
-  /* Results Table */
   .result-wrapper { margin-top: 24px; overflow-x: auto; }
-  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background-color: #fff; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background-color: #fff; }
   th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--border-color); }
   th:first-child, td:first-child { text-align: left; }
-  th { background-color: #fafafa; font-weight: 600; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
+  th { background-color: #fafafa; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
   tr:last-child td { border-bottom: none; }
   
   .site-a-col { background-color: var(--a-site-bg); }
@@ -137,11 +133,11 @@
   .row-title { font-weight: 600; color: var(--text-main); }
   .text-danger { color: var(--danger); }
   .text-success { color: var(--success); }
-  .final-row td { font-size: 16px; font-weight: 700; background-color: #fafafa; }
+  .text-info { color: var(--primary); }
+  .final-row td { font-size: 15px; font-weight: 700; background-color: #fafafa; }
   
-  /* Static Slab Table */
-  .slab-table { margin-top: 24px; font-size: 13px; }
-  .slab-table th { background-color: #f5f5f7; border-bottom: 1px solid var(--border-color); }
+  .slab-table { margin-top: 24px; font-size: 12px; }
+  .slab-table th { background-color: #f5f5f7; border-bottom: 1px solid var(--border-color); text-transform: none; }
   .slab-table tr:nth-child(even) td { background-color: #fafafa; }
   
   .footer-links { text-align: center; margin-top: 20px; }
@@ -173,7 +169,7 @@
       <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter prices to find your base net margin. Optionally, add your previous month's volume to calculate your exact final margin including dynamic incentives.</p>
+    <p class="instruction" id="appInstruction">Enter prices to find your base net margin. Add your previous month's volume to calculate your exact final margin including protection and dynamic incentives.</p>
     
     <div class="fuel-section">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
@@ -188,7 +184,7 @@
         </div>
         <div class="input-group">
           <label id="lblMsVol">Prev. Vol (KL) <span class="optional-tag">- Optional</span></label>
-          <input type="number" id="msVol" placeholder="e.g. 70" step="1">
+          <input type="number" id="msVol" placeholder="e.g. 20" step="1">
         </div>
       </div>
     </div>
@@ -206,7 +202,7 @@
         </div>
         <div class="input-group">
           <label id="lblHsdVol">Prev. Vol (KL) <span class="optional-tag">- Optional</span></label>
-          <input type="number" id="hsdVol" placeholder="e.g. 270" step="1">
+          <input type="number" id="hsdVol" placeholder="e.g. 120" step="1">
         </div>
       </div>
     </div>
@@ -226,7 +222,7 @@
 const i18n = {
   en: {
     appTitle: "Dealer Margin Calculator",
-    appInstruction: "Enter prices to find your base net margin. Optionally, add your previous month's volume to calculate your exact final margin including dynamic incentives.",
+    appInstruction: "Enter prices to find your base net margin. Add your previous month's volume to calculate your exact final margin including protection and dynamic incentives.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "Selling Price (RSP)",
@@ -238,12 +234,13 @@ const i18n = {
     colBSite: "B-Site",
     txtGross: "Base Profit (RSP - Inv)",
     txtLfr: "OMC LFR Deduction",
-    txtNet: "Base Net Margin",
+    txtNet: "Invoice Net Margin",
+    txtProt: "Margin Protection Shortfall",
     txtBr: "Business Return (Shortfall)",
     txtMp: "Manpower Return",
     txtFinal: "Final Total Margin",
     msgNoVol: "Volume not provided. Showing guaranteed base return.",
-    msgVol: "Dynamic returns added based on combined volume of",
+    msgVol: "Dynamic returns & protection added based on combined volume of",
     lblSlabTitle: "Reference: Margin Slabs & Fixed Rates",
     txtEnterVol: "Enter Vol"
   },
@@ -261,12 +258,13 @@ const i18n = {
     colBSite: "B-సైట్",
     txtGross: "సాధారణ లాభం (RSP - Inv)",
     txtLfr: "LFR తగ్గింపు",
-    txtNet: "బేస్ నెట్ మార్జిన్",
+    txtNet: "ఇన్వాయిస్ నెట్ మార్జిన్",
+    txtProt: "మార్జిన్ ప్రొటెక్షన్ షార్ట్‌ఫాల్",
     txtBr: "బిజినెస్ రిటర్న్ (షార్ట్‌ఫాల్)",
     txtMp: "మ్యాన్‌పవర్ రిటర్న్",
     txtFinal: "తుది మార్జిన్",
     msgNoVol: "వాల్యూమ్ ఇవ్వబడలేదు. బేస్ రిటర్న్ మాత్రమే చూపబడింది.",
-    msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా డైనమిక్ రిటర్న్ జోడించబడింది:",
+    msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా డైనమిక్ రిటర్న్ & ప్రొటెక్షన్ జోడించబడింది:",
     lblSlabTitle: "రిఫరెన్స్: మార్జిన్ స్లాబ్‌లు మరియు ఫిక్స్‌డ్ రేట్లు",
     txtEnterVol: "వాల్యూమ్ ఇవ్వండి"
   }
@@ -314,13 +312,28 @@ function calculateMargin() {
 
   let diffMs = msRsp - msInv;
   let diffHsd = hsdRsp - hsdInv;
+  
+  let netDmA_ms = diffMs - lfrA_ms;
+  let netDmB_ms = diffMs - lfrB_ms;
+  let netDmA_hsd = diffHsd - lfrA_hsd;
+  let netDmB_hsd = diffHsd - lfrB_hsd;
+
+  // OMC Protected Rates per liter
+  const protectedMS = 2472.97 / 1000;
+  const protectedHSD = 1881.92 / 1000;
 
   let br_ms_shortfall_pl = 0;
   let br_hsd_shortfall_pl = 0;
   let mp_ms_pl = 0;
   let mp_hsd_pl = 0;
+  
+  let protA_ms_pl = 0;
+  let protB_ms_pl = 0;
+  let protA_hsd_pl = 0;
+  let protB_hsd_pl = 0;
 
   if (hasVolume) {
+    // 1. Business Return
     const baseMS = msVol * 201.76;
     const baseHSD = hsdVol * 149.46;
     const baseTotal = baseMS + baseHSD;
@@ -333,7 +346,6 @@ function calculateMargin() {
     else if (totalVol <= 170) totalBR = Math.max(27500, baseTotal);
 
     let br_shortfall = totalBR - baseTotal;
-
     if (br_shortfall > 0 && baseTotal > 0) {
         let br_ms_total_shortfall = br_shortfall * (baseMS / baseTotal);
         let br_hsd_total_shortfall = br_shortfall * (baseHSD / baseTotal);
@@ -341,6 +353,7 @@ function calculateMargin() {
         if (hsdVol > 0) br_hsd_shortfall_pl = br_hsd_total_shortfall / (hsdVol * 1000);
     }
 
+    // 2. Manpower
     let slab_ms = 0, slab_hsd = 0;
     const slabs = [
       { limit: 400, ms: 379.67, hsd: 281.23 }, { limit: 600, ms: 340.19, hsd: 251.99 },
@@ -358,6 +371,13 @@ function calculateMargin() {
 
     mp_ms_pl = slab_ms / 1000;
     mp_hsd_pl = slab_hsd / 1000;
+    
+    // 3. Margin Protection Shortfall (Only applies if actual invoice margin is less than protected fixed margin)
+    protA_ms_pl = Math.max(0, protectedMS - netDmA_ms);
+    protB_ms_pl = Math.max(0, protectedMS - netDmB_ms);
+    
+    protA_hsd_pl = Math.max(0, protectedHSD - netDmA_hsd);
+    protB_hsd_pl = Math.max(0, protectedHSD - netDmB_hsd);
   }
 
   function fmt(num) {
@@ -367,11 +387,17 @@ function calculateMargin() {
   const t = i18n[currentLang];
   const volMsg = hasVolume ? `${t.msgVol} <b>${totalVol} KL</b>` : t.msgNoVol;
 
-  let mpDisplayMS = hasVolume ? `<span class="text-success">+${fmt(mp_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
-  let mpDisplayHSD = hasVolume ? `<span class="text-success">+${fmt(mp_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let mpDisplayMS = hasVolume ? `<span class="text-success">+${fmt(mp_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let mpDisplayHSD = hasVolume ? `<span class="text-success">+${fmt(mp_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
 
-  let brDisplayMS = hasVolume ? `<span class="text-success">+${fmt(br_ms_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
-  let brDisplayHSD = hasVolume ? `<span class="text-success">+${fmt(br_hsd_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let brDisplayMS = hasVolume ? `<span class="text-success">+${fmt(br_ms_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let brDisplayHSD = hasVolume ? `<span class="text-success">+${fmt(br_hsd_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  
+  let protA_ms_display = hasVolume ? `<span class="text-info">+${fmt(protA_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let protB_ms_display = hasVolume ? `<span class="text-info">+${fmt(protB_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  
+  let protA_hsd_display = hasVolume ? `<span class="text-info">+${fmt(protA_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let protB_hsd_display = hasVolume ? `<span class="text-info">+${fmt(protB_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
 
   let html = `<div class="card result-wrapper">
     <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">${volMsg}</p>
@@ -386,23 +412,24 @@ function calculateMargin() {
   html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700;">🚗 MS (Petrol)</td></tr>`;
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffMs)}</td><td>${fmt(diffMs)}</td></tr>`;
   html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_ms).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_ms).replace('-','')}</td></tr>`;
-  html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(diffMs - lfrA_ms)}</td><td style="font-weight: 600;">${fmt(diffMs - lfrB_ms)}</td></tr>`;
+  html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(netDmA_ms)}</td><td style="font-weight: 600;">${fmt(netDmB_ms)}</td></tr>`;
+  html += `<tr><td class="row-title text-info">${t.txtProt}</td><td>${protA_ms_display}</td><td>${protB_ms_display}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayMS}</td><td>${mpDisplayMS}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayMS}</td><td>${brDisplayMS}</td></tr>`;
-  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffMs - lfrA_ms + mp_ms_pl + br_ms_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(diffMs - lfrB_ms + mp_ms_pl + br_ms_shortfall_pl)}</td></tr>`;
+  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_ms + protA_ms_pl + mp_ms_pl + br_ms_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_ms + protB_ms_pl + mp_ms_pl + br_ms_shortfall_pl)}</td></tr>`;
 
   // HSD Rows
   html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700; border-top: 4px solid var(--bg-main);">🚛 HSD (Diesel)</td></tr>`;
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffHsd)}</td><td>${fmt(diffHsd)}</td></tr>`;
   html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_hsd).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_hsd).replace('-','')}</td></tr>`;
-  html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(diffHsd - lfrA_hsd)}</td><td style="font-weight: 600;">${fmt(diffHsd - lfrB_hsd)}</td></tr>`;
+  html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(netDmA_hsd)}</td><td style="font-weight: 600;">${fmt(netDmB_hsd)}</td></tr>`;
+  html += `<tr><td class="row-title text-info">${t.txtProt}</td><td>${protA_hsd_display}</td><td>${protB_hsd_display}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayHSD}</td><td>${mpDisplayHSD}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayHSD}</td><td>${brDisplayHSD}</td></tr>`;
-  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffHsd - lfrA_hsd + mp_hsd_pl + br_hsd_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(diffHsd - lfrB_hsd + mp_hsd_pl + br_hsd_shortfall_pl)}</td></tr>`;
+  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_hsd + protA_hsd_pl + mp_hsd_pl + br_hsd_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_hsd + protB_hsd_pl + mp_hsd_pl + br_hsd_shortfall_pl)}</td></tr>`;
   
   html += `</table></div>`;
 
-  // Static Slabs Table (Shows only if volume is omitted)
   if (!hasVolume) {
     html += `<div class="card slab-table no-print" style="padding: 20px;">
       <div class="section-title" style="margin-bottom: 20px;">${t.lblSlabTitle}</div>
@@ -432,7 +459,7 @@ function calculateMargin() {
           
           <table style="margin-bottom: 0;">
             <tr><th colspan="2" style="text-align: center;">Base Business Return</th></tr>
-            <tr><td>MS</td><td>₹201.76 / KL</td></tr>
+            <tr><td>MS</td><td>₹201.77 / KL</td></tr>
             <tr><td>HSD</td><td>₹149.46 / KL</td></tr>
             <tr><th colspan="2" style="text-align: center; border-top: 2px solid var(--border-color);">Fixed Rate (Excluding BR)</th></tr>
             <tr><td>MS</td><td>₹2,472.97 / KL</td></tr>
