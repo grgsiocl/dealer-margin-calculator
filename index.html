@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,7 @@
 <title>Dealer Margin Calculator</title>
 <style>
   body { font-family: -apple-system, Helvetica, sans-serif; color: #1c1c1e; background-color: #f2f2f7; margin: 0; padding: 20px; }
-  .card { margin: 0 auto; width: 100%; max-width: 550px; background-color: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); box-sizing: border-box; }
+  .card { margin: 0 auto; width: 100%; max-width: 600px; background-color: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); box-sizing: border-box; }
   
   /* Prominent Language Toggle */
   .lang-toggle-container { display: flex; justify-content: center; margin-bottom: 20px; }
@@ -22,12 +22,12 @@
 
   /* Form Styles */
   .form-group { margin-bottom: 20px; background-color: #f9f9f9; padding: 16px; border-radius: 12px; border: 1px solid #e5e5ea; }
-  .form-row { display: flex; gap: 16px; margin-top: 12px; }
-  .form-col { flex: 1; }
-  label { display: block; font-size: 13px; font-weight: 600; color: #495057; margin-bottom: 6px; }
+  .form-row { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .form-col { flex: 1; min-width: 28%; }
+  label { display: block; font-size: 12px; font-weight: 600; color: #495057; margin-bottom: 6px; }
   .section-title { color: #1c1c1e; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
   
-  input[type="number"] { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #c6c6c8; border-radius: 8px; box-sizing: border-box; background-color: #ffffff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+  input[type="number"] { width: 100%; padding: 10px; font-size: 15px; border: 1px solid #c6c6c8; border-radius: 8px; box-sizing: border-box; background-color: #ffffff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
   input[type="number"]:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); }
   
   .calc-btn { width: 100%; background-color: #007aff; color: #ffffff; font-size: 17px; font-weight: 600; padding: 16px; border: none; border-radius: 12px; cursor: pointer; margin-top: 8px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); transition: transform 0.1s, background-color 0.2s; }
@@ -66,18 +66,22 @@
   
   <div class="no-print">
     <h3 id="appTitle">⛽️ Dealer Margin Calculator</h3>
-    <div id="appInstruction" class="instruction-text">Enter the Selling Price and Purchase Price per liter. The calculator will break down your exact profit.</div>
+    <div id="appInstruction" class="instruction-text">Enter the Selling Price, Purchase Price, and Volumes. The calculator will dynamically break down your exact profit.</div>
     
     <div class="form-group">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
       <div class="form-row">
         <div class="form-col">
-          <label id="lblMsRsp">Selling Price (RSP)</label>
+          <label id="lblMsRsp">RSP</label>
           <input type="number" id="msRsp" placeholder="e.g. 109.91" step="0.01">
         </div>
         <div class="form-col">
-          <label id="lblMsInv">Purchase Price (Inv)</label>
+          <label id="lblMsInv">Invoice</label>
           <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
+        </div>
+        <div class="form-col">
+          <label id="lblMsVol">Volume (KL)</label>
+          <input type="number" id="msVol" placeholder="e.g. 70" step="1">
         </div>
       </div>
     </div>
@@ -86,12 +90,16 @@
       <div class="section-title" id="lblDiesel">🚛 Diesel (HSD)</div>
       <div class="form-row">
         <div class="form-col">
-          <label id="lblHsdRsp">Selling Price (RSP)</label>
+          <label id="lblHsdRsp">RSP</label>
           <input type="number" id="hsdRsp" placeholder="e.g. 97.73" step="0.01">
         </div>
         <div class="form-col">
-          <label id="lblHsdInv">Purchase Price (Inv)</label>
+          <label id="lblHsdInv">Invoice</label>
           <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
+        </div>
+        <div class="form-col">
+          <label id="lblHsdVol">Volume (KL)</label>
+          <input type="number" id="hsdVol" placeholder="e.g. 270" step="1">
         </div>
       </div>
     </div>
@@ -121,11 +129,12 @@
 const i18n = {
   en: {
     appTitle: "⛽️ Dealer Margin Calculator",
-    appInstruction: "Enter the Selling Price and Purchase Price per liter. The calculator will break down your exact profit.",
+    appInstruction: "Enter the Selling Price, Purchase Price, and Volumes. The calculator will dynamically break down your exact profit.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
-    lblRsp: "Selling Price (RSP)",
-    lblInv: "Purchase Price (Inv)",
+    lblRsp: "RSP",
+    lblInv: "Invoice",
+    lblVol: "Volume (KL)",
     btnCalc: "Calculate Margin",
     btnPrint: "🖨️ Print / Save PDF",
     btnContact: "✉️ Report Issue / Contact Us",
@@ -136,20 +145,21 @@ const i18n = {
     txtGross: "💰 Base Profit (RSP - Inv)",
     txtLessLfr: "➖ OMC Fee (LFR Deduction)",
     txtNetDm: "🟰 Net Margin",
-    txtAddVdm: "➕ Extra Returns (Variable DM)",
+    txtAddVdm: "➕ Extra Returns (Dynamic VDM)",
     txtFinal: "🏆 Final Margin Per Litre<br><span style='font-size: 11px; font-weight: normal; color: #6c6c70;'>After all deductions & incentives offset</span>",
     txtGuideTitle: "Terminology Guide:",
     txtGuide1: "• <b>MS:</b> Motor Spirit (Petrol) &nbsp;|&nbsp; <b>HSD:</b> High-Speed Diesel",
     txtGuide2: "• <b>RSP:</b> Retail Selling Price &nbsp;|&nbsp; <b>Inv:</b> Invoice Price",
-    txtGuide3: "• <b>LFR:</b> OMC Licence Fee &nbsp;|&nbsp; <b>Variable DM:</b> Additional Business Returns"
+    txtGuide3: "• <b>LFR:</b> OMC Licence Fee &nbsp;|&nbsp; <b>Dynamic VDM:</b> Additional Business Returns per liter based on volume"
   },
   te: {
     appTitle: "⛽️ డీలర్ మార్జిన్ కాలిక్యులేటర్",
-    appInstruction: "దయచేసి లీటరుకు అమ్మకపు ధర (RSP) మరియు కొనుగోలు ధర (Invoice) నమోదు చేయండి.",
+    appInstruction: "దయచేసి లీటరుకు అమ్మకపు ధర (RSP), కొనుగోలు ధర (Invoice) మరియు వాల్యూమ్ నమోదు చేయండి.",
     lblPetrol: "🚗 పెట్రోల్ (MS)",
     lblDiesel: "🚛 డీజిల్ (HSD)",
-    lblRsp: "అమ్మకపు ధర (RSP)",
-    lblInv: "కొనుగోలు ధర (Inv)",
+    lblRsp: "RSP",
+    lblInv: "కొనుగోలు (Inv)",
+    lblVol: "వాల్యూమ్ (KL)",
     btnCalc: "మార్జిన్ లెక్కించు",
     btnPrint: "🖨️ ప్రింట్ / PDF సేవ్ చేయండి",
     btnContact: "✉️ సమస్యను నివేదించండి / సంప్రదించండి",
@@ -160,12 +170,12 @@ const i18n = {
     txtGross: "💰 సాధారణ లాభం (RSP - Inv)",
     txtLessLfr: "➖ OMC ఫీజు (LFR తగ్గింపు)",
     txtNetDm: "🟰 నెట్ మార్జిన్",
-    txtAddVdm: "➕ అదనపు రాబడి (Variable DM)",
+    txtAddVdm: "➕ అదనపు రాబడి (Dynamic VDM)",
     txtFinal: "🏆 తుది మార్జిన్ (లీటరుకు)<br><span style='font-size: 11px; font-weight: normal; color: #6c6c70;'>అన్ని మినహాయింపులు & ఇన్సెంటివ్‌ల తర్వాత డీలర్‌కు వచ్చేది</span>",
     txtGuideTitle: "పదకోశం:",
     txtGuide1: "• <b>MS:</b> పెట్రోల్ &nbsp;|&nbsp; <b>HSD:</b> డీజిల్",
     txtGuide2: "• <b>RSP:</b> రిటైల్ విక్రయ ధర &nbsp;|&nbsp; <b>Inv:</b> ఇన్వాయిస్ ధర",
-    txtGuide3: "• <b>LFR:</b> లైసెన్స్ ఫీజు &nbsp;|&nbsp; <b>Variable DM:</b> అదనపు రాబడి"
+    txtGuide3: "• <b>LFR:</b> లైసెన్స్ ఫీజు &nbsp;|&nbsp; <b>Dynamic VDM:</b> వాల్యూమ్ ఆధారంగా అదనపు రాబడి"
   }
 };
 
@@ -180,9 +190,11 @@ function switchLanguage() {
   document.getElementById('lblPetrol').innerText = i18n[currentLang].lblPetrol;
   document.getElementById('lblMsRsp').innerText = i18n[currentLang].lblRsp;
   document.getElementById('lblMsInv').innerText = i18n[currentLang].lblInv;
+  document.getElementById('lblMsVol').innerText = i18n[currentLang].lblVol;
   document.getElementById('lblDiesel').innerText = i18n[currentLang].lblDiesel;
   document.getElementById('lblHsdRsp').innerText = i18n[currentLang].lblRsp;
   document.getElementById('lblHsdInv').innerText = i18n[currentLang].lblInv;
+  document.getElementById('lblHsdVol').innerText = i18n[currentLang].lblVol;
   document.getElementById('btnCalculate').innerText = i18n[currentLang].btnCalc;
   document.getElementById('btnPrint').innerHTML = i18n[currentLang].btnPrint;
   document.getElementById('btnContact').innerHTML = i18n[currentLang].btnContact;
@@ -195,32 +207,94 @@ function switchLanguage() {
 function calculateMargin() {
   let msRsp = parseFloat(document.getElementById('msRsp').value) || 0;
   let msInvoice = parseFloat(document.getElementById('msInvoice').value) || 0;
+  let msVol = parseFloat(document.getElementById('msVol').value) || 0;
+  
   let hsdRsp = parseFloat(document.getElementById('hsdRsp').value) || 0;
   let hsdInvoice = parseFloat(document.getElementById('hsdInvoice').value) || 0;
+  let hsdVol = parseFloat(document.getElementById('hsdVol').value) || 0;
 
-  // FIXED CONSTANTS
-  const lfrA_ms = 0.52334;
-  const lfrB_ms = 0.23596;
-  const lfrA_hsd = 0.43610;
-  const lfrB_hsd = 0.19665;
-  const vdmA_ms = 0.46236;
-  const vdmB_ms = 0.37975;
-  const vdmA_hsd = 0.36392;
-  const vdmB_hsd = 0.28123;
+  let totalVol = msVol + hsdVol;
 
-  // MS Calculations
+  // Exact LFR Rates converting to per litre
+  const lfrA_ms = (443.50 * 1.18) / 1000;
+  const lfrA_hsd = (369.58 * 1.18) / 1000;
+  const lfrB_ms = (235.96 * 1.28) / 1000;
+  const lfrB_hsd = (196.65 * 1.28) / 1000;
+
+  // Base Margins
   let diffMs = msRsp - msInvoice;
+  let diffHsd = hsdRsp - hsdInvoice;
+
+  // Dynamic Variable Dealer Margin (VDM) Calculation
+  let vdm_ms = 0;
+  let vdm_hsd = 0;
+
+  if (totalVol > 0) {
+    // 1. Business Return Slabs
+    const baseMS = msVol * 201.76;
+    const baseHSD = hsdVol * 149.46;
+    const baseTotal = baseMS + baseHSD;
+    let totalBR = baseTotal;
+
+    if (totalVol < 12) totalBR = baseTotal;
+    else if (totalVol <= 25) totalBR = Math.max(12000, baseTotal);
+    else if (totalVol <= 50) totalBR = Math.max(20000, baseTotal);
+    else if (totalVol <= 100) totalBR = Math.max(24000, baseTotal);
+    else if (totalVol <= 150) totalBR = Math.max(26000, baseTotal);
+    else if (totalVol <= 170) totalBR = Math.max(27500, baseTotal);
+
+    let br_ms = baseTotal > 0 ? (totalBR * (baseMS / baseTotal)) : 0;
+    let br_hsd = baseTotal > 0 ? (totalBR * (baseHSD / baseTotal)) : 0;
+
+    // 2. Additional Manpower & Business Returns Slabs
+    let slab_ms = 0, slab_hsd = 0;
+    const slabs = [
+      { limit: 400, ms: 379.67, hsd: 281.23 },
+      { limit: 600, ms: 340.19, hsd: 251.99 },
+      { limit: 800, ms: 300.72, hsd: 222.75 },
+      { limit: 1000, ms: 261.24, hsd: 193.51 },
+      { limit: 1200, ms: 221.77, hsd: 164.27 },
+      { limit: 1400, ms: 182.29, hsd: 135.03 },
+      { limit: 1600, ms: 142.82, hsd: 105.79 },
+      { limit: 1800, ms: 103.34, hsd: 76.55 },
+      { limit: 2000, ms: 78.95, hsd: 58.48 },
+      { limit: 2200, ms: 52.63, hsd: 38.99 },
+      { limit: 2400, ms: 39.47, hsd: 29.24 },
+      { limit: 2600, ms: 26.32, hsd: 19.49 },
+      { limit: 2800, ms: 13.16, hsd: 9.75 },
+      { limit: Infinity, ms: 0, hsd: 0 }
+    ];
+
+    for (let slab of slabs) {
+      if (totalVol <= slab.limit) {
+        slab_ms = slab.ms;
+        slab_hsd = slab.hsd;
+        break;
+      }
+    }
+
+    let add_ms = msVol * slab_ms;
+    let add_hsd = hsdVol * slab_hsd;
+
+    // Convert to Per Liter
+    if (msVol > 0) vdm_ms = (br_ms + add_ms) / (msVol * 1000);
+    if (hsdVol > 0) vdm_hsd = (br_hsd + add_hsd) / (hsdVol * 1000);
+  } else {
+    // Fallback if volumes are omitted
+    vdm_ms = 201.76 / 1000;
+    vdm_hsd = 149.46 / 1000;
+  }
+
+  // Final Calculations for the Table
   let netDmA_ms = diffMs - lfrA_ms;
   let netDmB_ms = diffMs - lfrB_ms;
-  let finalDmA_ms = netDmA_ms + vdmA_ms;
-  let finalDmB_ms = netDmB_ms + vdmB_ms;
+  let finalDmA_ms = netDmA_ms + vdm_ms;
+  let finalDmB_ms = netDmB_ms + vdm_ms;
 
-  // HSD Calculations
-  let diffHsd = hsdRsp - hsdInvoice;
   let netDmA_hsd = diffHsd - lfrA_hsd;
   let netDmB_hsd = diffHsd - lfrB_hsd;
-  let finalDmA_hsd = netDmA_hsd + vdmA_hsd;
-  let finalDmB_hsd = netDmB_hsd + vdmB_hsd;
+  let finalDmA_hsd = netDmA_hsd + vdm_hsd;
+  let finalDmB_hsd = netDmB_hsd + vdm_hsd;
 
   function fmt(num) {
       let val = Math.abs(num).toFixed(5);
@@ -234,20 +308,20 @@ function calculateMargin() {
 
   // --- MS SECTION ---
   output += "<tr><td colspan='3' style='background-color: #fafafa; border-bottom: 1px solid #e5e5ea; font-weight: 700; text-align: center; color: #1c1c1e; font-size: 15px;'>🚗 " + t.lblPetrol.replace('🚗 ', '') + "</td></tr>";
-  output += "<tr><td colspan='3' style='padding: 8px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>" + t.txtInputs + ": RSP <b>&#8377;" + msRsp.toFixed(2) + "</b> &nbsp;|&nbsp; Inv <b>&#8377;" + msInvoice.toFixed(2) + "</b></td></tr>";
+  output += "<tr><td colspan='3' style='padding: 8px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>" + t.txtInputs + ": RSP <b>&#8377;" + msRsp.toFixed(2) + "</b> &nbsp;|&nbsp; Inv <b>&#8377;" + msInvoice.toFixed(2) + "</b> &nbsp;|&nbsp; Vol <b>" + msVol + " KL</b></td></tr>";
   output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 500;'>" + t.txtGross + "</td><td colspan='2' class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: center; font-weight: bold; color: #1c1c1e;'>" + fmt(diffMs) + "</td></tr>";
   output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #d70015;'>" + t.txtLessLfr + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrA_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrB_ms).replace("-", "") + "</td></tr>";
   output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 600;'>" + t.txtNetDm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmA_ms) + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmB_ms) + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>" + t.txtAddVdm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmA_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmB_ms).replace("-", "") + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>" + t.txtAddVdm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_ms).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_ms).replace("-", "") + "</td></tr>";
   output += "<tr class='highlight-row'><td style='background-color: #f2f2f7; font-weight: bold; color: #1c1c1e; font-size: 14px; padding-top: 16px; padding-bottom: 16px;'>" + t.txtFinal + "</td><td class='nowrap' style='background-color: #e8f2ff; text-align: right; font-weight: bold; color: #0040dd; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmA_ms) + "</td><td class='nowrap' style='background-color: #eaf8e6; text-align: right; font-weight: bold; color: #2d7a17; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmB_ms) + "</td></tr>";
 
   // --- HSD SECTION ---
   output += "<tr><td colspan='3' style='background-color: #fafafa; border-bottom: 1px solid #e5e5ea; border-top: 8px solid #f2f2f7; font-weight: 700; text-align: center; color: #1c1c1e; font-size: 15px;'>🚛 " + t.lblDiesel.replace('🚛 ', '') + "</td></tr>";
-  output += "<tr><td colspan='3' style='padding: 8px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>" + t.txtInputs + ": RSP <b>&#8377;" + hsdRsp.toFixed(2) + "</b> &nbsp;|&nbsp; Inv <b>&#8377;" + hsdInvoice.toFixed(2) + "</b></td></tr>";
+  output += "<tr><td colspan='3' style='padding: 8px; background-color: #ffffff; border-bottom: 1px solid #e5e5ea; font-size: 12px; text-align: center; color: #6c6c70;'>" + t.txtInputs + ": RSP <b>&#8377;" + hsdRsp.toFixed(2) + "</b> &nbsp;|&nbsp; Inv <b>&#8377;" + hsdInvoice.toFixed(2) + "</b> &nbsp;|&nbsp; Vol <b>" + hsdVol + " KL</b></td></tr>";
   output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 500;'>" + t.txtGross + "</td><td colspan='2' class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: center; font-weight: bold; color: #1c1c1e;'>" + fmt(diffHsd) + "</td></tr>";
   output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #d70015;'>" + t.txtLessLfr + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrA_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #d70015;'>-" + fmt(lfrB_hsd).replace("-", "") + "</td></tr>";
   output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #495057; font-weight: 600;'>" + t.txtNetDm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmA_hsd) + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; font-weight: 600;'>" + fmt(netDmB_hsd) + "</td></tr>";
-  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>" + t.txtAddVdm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmA_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdmB_hsd).replace("-", "") + "</td></tr>";
+  output += "<tr><td style='border-bottom: 1px solid #e5e5ea; color: #2d7a17;'>" + t.txtAddVdm + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_hsd).replace("-", "") + "</td><td class='nowrap' style='border-bottom: 1px solid #e5e5ea; text-align: right; color: #2d7a17;'>+" + fmt(vdm_hsd).replace("-", "") + "</td></tr>";
   output += "<tr class='highlight-row'><td style='background-color: #f2f2f7; font-weight: bold; color: #1c1c1e; font-size: 14px; padding-top: 16px; padding-bottom: 16px;'>" + t.txtFinal + "</td><td class='nowrap' style='background-color: #e8f2ff; text-align: right; font-weight: bold; color: #0040dd; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmA_hsd) + "</td><td class='nowrap' style='background-color: #eaf8e6; text-align: right; font-weight: bold; color: #2d7a17; font-size: 14px; vertical-align: middle;'>" + fmt(finalDmB_hsd) + "</td></tr>";
 
   output += "</table>";
