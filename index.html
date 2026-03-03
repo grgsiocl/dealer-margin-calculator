@@ -81,10 +81,10 @@
   
   .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
   
-  .input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+  .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
   
-  @media (max-width: 600px) {
-      .input-grid { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 500px) {
+      .input-grid { grid-template-columns: 1fr; }
   }
 
   .input-group { display: flex; flex-direction: column; gap: 6px; }
@@ -95,7 +95,7 @@
   input[type="number"] { 
     width: 100%; 
     padding: 12px; 
-    font-size: 15px; 
+    font-size: 16px; 
     border: 1px solid var(--border-color); 
     border-radius: 10px; 
     background-color: #fafafa; 
@@ -103,6 +103,7 @@
     transition: border-color 0.2s, background-color 0.2s;
   }
   input[type="number"]:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+  input[type="number"]::placeholder { color: #c7c7cc; }
 
   .calc-btn { 
     width: 100%; 
@@ -169,26 +170,22 @@
       <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter your invoice prices and optionally your volume to see your exact final margin. Billable prices are pre-filled for exact calculation but can be edited.</p>
+    <p class="instruction" id="appInstruction">Enter your invoice prices and optionally your volume to see your exact final margin. Calculations accurately reflect the OMC tax-free basic product billable prices.</p>
     
     <div class="fuel-section">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
       <div class="input-grid">
         <div class="input-group">
-          <label id="lblMsRsp">RSP</label>
+          <label id="lblMsRsp">Selling Price (RSP)</label>
           <input type="number" id="msRsp" placeholder="e.g. 109.91" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblMsInv">Invoice</label>
+          <label id="lblMsInv">Invoice Price</label>
           <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblMsVol">Vol (KL) <span class="optional-tag">- Opt</span></label>
-          <input type="number" id="msVol" placeholder="15" step="1">
-        </div>
-        <div class="input-group">
-          <label id="lblMsBill">Billable <span class="optional-tag">- Pre-filled</span></label>
-          <input type="number" id="msBill" value="15399.31" step="0.01">
+          <label id="lblMsVol">Prev. Vol (KL) <span class="optional-tag">- Opt</span></label>
+          <input type="number" id="msVol" placeholder="e.g. 15" step="1">
         </div>
       </div>
     </div>
@@ -197,20 +194,16 @@
       <div class="section-title" id="lblDiesel">🚛 Diesel (HSD)</div>
       <div class="input-grid">
         <div class="input-group">
-          <label id="lblHsdRsp">RSP</label>
+          <label id="lblHsdRsp">Selling Price (RSP)</label>
           <input type="number" id="hsdRsp" placeholder="e.g. 97.73" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblHsdInv">Invoice</label>
+          <label id="lblHsdInv">Invoice Price</label>
           <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblHsdVol">Vol (KL) <span class="optional-tag">- Opt</span></label>
-          <input type="number" id="hsdVol" placeholder="145" step="1">
-        </div>
-        <div class="input-group">
-          <label id="lblHsdBill">Billable <span class="optional-tag">- Pre-filled</span></label>
-          <input type="number" id="hsdBill" value="40005.80" step="0.01">
+          <label id="lblHsdVol">Prev. Vol (KL) <span class="optional-tag">- Opt</span></label>
+          <input type="number" id="hsdVol" placeholder="e.g. 145" step="1">
         </div>
       </div>
     </div>
@@ -265,28 +258,27 @@
 const i18n = {
   en: {
     appTitle: "Dealer Margin Calculator",
-    appInstruction: "Enter your invoice prices and optionally your volume to see your exact final margin. Billable prices are pre-filled for exact calculation but can be edited.",
+    appInstruction: "Enter your invoice prices and optionally your volume to see your exact final margin. Calculations accurately reflect the OMC tax-free basic product billable prices.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
-    lblRsp: "RSP",
-    lblInv: "Invoice",
-    lblVol: "Vol (KL) <span class='optional-tag'>- Opt</span>",
-    lblBill: "Billable <span class='optional-tag'>- Pre-filled</span>",
+    lblRsp: "Selling Price (RSP)",
+    lblInv: "Invoice Price",
+    lblVol: "Prev. Vol (KL) <span class='optional-tag'>- Opt</span>",
     btnCalc: "Calculate Margin",
     colDetails: "Breakdown Per Liter",
     colASite: "A-Site",
     colBSite: "B-Site",
-    txtGross: "Base Profit (RSP - Inv)",
+    txtGross: "Gross Profit (RSP - Inv)",
     txtLfr: "OMC LFR Deduction",
-    txtNet: "Invoice Net Margin",
-    txtVar: "Variable Margin (0.870% / 0.266%)",
+    txtNet: "Net Margin (Pre-VDM)",
+    txtVar: "Variable Commission",
     txtBr: "Business Return (Shortfall)",
     txtMp: "Manpower Return",
     txtFinal: "Final Total Margin",
     txtCn: "Expected Variable Dealer Margin (Rs)",
     txtTotalLfr: "Total Monthly LFR Deduction (Rs)",
-    msgNoVol: "Volume omitted. Showing guaranteed base return per liter.",
-    msgVol: "Dynamic returns & monthly totals calculated for combined volume of",
+    msgNoVol: "Volume omitted. Showing guaranteed base return.",
+    msgVol: "Dynamic Variable Dealer Margin calculated for combined volume of",
     lblSlabTitle: "Reference: Margin Slabs & Fixed Rates (1-Dec-24)",
     txtEnterVol: "Enter Vol"
   },
@@ -295,18 +287,17 @@ const i18n = {
     appInstruction: "మీ నెట్ మార్జిన్ తెలుసుకోవడానికి ధరలను నమోదు చేయండి. డైనమిక్ ఇన్సెంటివ్‌లతో సహా మీ ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి, వాల్యూమ్‌ను నమోదు చేయండి.",
     lblPetrol: "🚗 పెట్రోల్ (MS)",
     lblDiesel: "🚛 డీజిల్ (HSD)",
-    lblRsp: "RSP",
-    lblInv: "ఇన్వాయిస్",
-    lblVol: "వాల్యూమ్ (KL) <span class='optional-tag'>- ఐచ్ఛికం</span>",
-    lblBill: "బిల్ చేయదగిన <span class='optional-tag'>- ప్రీ-ఫిల్డ్</span>",
+    lblRsp: "అమ్మకపు ధర (RSP)",
+    lblInv: "ఇన్వాయిస్ ధర",
+    lblVol: "గత నెల వాల్యూమ్ <span class='optional-tag'>- ఐచ్ఛికం</span>",
     btnCalc: "మార్జిన్ లెక్కించు",
     colDetails: "లీటరుకు వివరాలు",
     colASite: "A-సైట్",
     colBSite: "B-సైట్",
     txtGross: "సాధారణ లాభం (RSP - Inv)",
     txtLfr: "LFR తగ్గింపు",
-    txtNet: "ఇన్వాయిస్ నెట్ మార్జిన్",
-    txtVar: "వేరియబుల్ మార్జిన్",
+    txtNet: "నెట్ మార్జిన్",
+    txtVar: "వేరియబుల్ కమిషన్",
     txtBr: "బిజినెస్ రిటర్న్ (షార్ట్‌ఫాల్)",
     txtMp: "మ్యాన్‌పవర్ రిటర్న్",
     txtFinal: "తుది మార్జిన్",
@@ -334,7 +325,6 @@ function switchLanguage() {
   document.querySelectorAll('#lblMsRsp, #lblHsdRsp').forEach(el => el.innerHTML = t.lblRsp);
   document.querySelectorAll('#lblMsInv, #lblHsdInv').forEach(el => el.innerHTML = t.lblInv);
   document.querySelectorAll('#lblMsVol, #lblHsdVol').forEach(el => el.innerHTML = t.lblVol);
-  document.querySelectorAll('#lblMsBill, #lblHsdBill').forEach(el => el.innerHTML = t.lblBill);
   
   document.getElementById('btnCalculate').innerText = t.btnCalc;
   document.getElementById('lblSlabTitle').innerText = t.lblSlabTitle;
@@ -348,20 +338,22 @@ function calculateMargin() {
   let msRsp = parseFloat(document.getElementById('msRsp').value) || 0;
   let msInv = parseFloat(document.getElementById('msInvoice').value) || 0;
   let msVol = parseFloat(document.getElementById('msVol').value) || 0;
-  let msBill = parseFloat(document.getElementById('msBill').value) || 0;
   
   let hsdRsp = parseFloat(document.getElementById('hsdRsp').value) || 0;
   let hsdInv = parseFloat(document.getElementById('hsdInvoice').value) || 0;
   let hsdVol = parseFloat(document.getElementById('hsdVol').value) || 0;
-  let hsdBill = parseFloat(document.getElementById('hsdBill').value) || 0;
 
   let totalVol = msVol + hsdVol;
 
-  // LFR logic with 18% GST for BOTH A and B sites
+  // LFR logic with 18% GST for both A and B sites
   const lfrA_ms = (443.50 * 1.18) / 1000;
   const lfrA_hsd = (369.58 * 1.18) / 1000;
   const lfrB_ms = (184.34 * 1.18) / 1000;
   const lfrB_hsd = (153.62 * 1.18) / 1000;
+
+  // Exact Tax-Free Basic Billable Prices derived mathematically from OMC credit notes
+  const msBillPrice = 15399.31;
+  const hsdBillPrice = 40006.01;
 
   let diffMs = msRsp - msInv;
   let diffHsd = hsdRsp - hsdInv;
@@ -375,12 +367,12 @@ function calculateMargin() {
   let br_hsd_shortfall_pl = 0;
   let mp_ms_pl = 0;
   let mp_hsd_pl = 0;
-
-  let var_ms_pl = (msBill * 0.00870) / 1000;
-  let var_hsd_pl = (hsdBill * 0.00266) / 1000;
+  
+  let var_ms_pl = (msBillPrice * 0.00870) / 1000;
+  let var_hsd_pl = (hsdBillPrice * 0.00266) / 1000;
 
   if (totalVol > 0) {
-    // 1. Business Return Shortfall (Using 201.77 for precision match)
+    // 1. Business Return Shortfall 
     const baseMS = msVol * 201.77;
     const baseHSD = hsdVol * 149.46;
     const baseTotal = baseMS + baseHSD;
@@ -420,11 +412,11 @@ function calculateMargin() {
     mp_hsd_pl = slab_hsd / 1000;
   }
   
-  // 3. Expected Variable Dealer Margin (Identical across A and B site)
+  // Final Variable Dealer Margin (Credit Note) calculation identical across site types
   let cn_ms = (msVol > 0) ? (br_ms_shortfall_pl + mp_ms_pl + var_ms_pl) * msVol * 1000 : 0;
   let cn_hsd = (hsdVol > 0) ? (br_hsd_shortfall_pl + mp_hsd_pl + var_hsd_pl) * hsdVol * 1000 : 0;
 
-  // 4. Total Monthly LFR Deduction Amounts
+  // Monthly LFR Deductions
   let totalLfrA_ms = msVol * lfrA_ms * 1000;
   let totalLfrB_ms = msVol * lfrB_ms * 1000;
   let totalLfrA_hsd = hsdVol * lfrA_hsd * 1000;
@@ -442,9 +434,9 @@ function calculateMargin() {
 
   let brDisplayMS = (msVol > 0) ? `<span class="text-success">+${fmt(br_ms_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
   let brDisplayHSD = (hsdVol > 0) ? `<span class="text-success">+${fmt(br_hsd_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
-  
-  let varDisplayMS = (msVol > 0) ? `<span class="text-info">+${fmt(var_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
-  let varDisplayHSD = (hsdVol > 0) ? `<span class="text-info">+${fmt(var_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+
+  let varDisplayMS = (msVol > 0) ? `<span class="text-success">+${fmt(var_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let varDisplayHSD = (hsdVol > 0) ? `<span class="text-success">+${fmt(var_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
 
   let html = `<div class="card result-wrapper">
     <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">${volMsg}</p>
@@ -460,14 +452,14 @@ function calculateMargin() {
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffMs)}</td><td>${fmt(diffMs)}</td></tr>`;
   html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_ms).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_ms).replace('-','')}</td></tr>`;
   html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(netDmA_ms)}</td><td style="font-weight: 600;">${fmt(netDmB_ms)}</td></tr>`;
-  html += `<tr><td class="row-title text-info">${t.txtVar}</td><td>${varDisplayMS}</td><td>${varDisplayMS}</td></tr>`;
+  html += `<tr><td class="row-title text-success">${t.txtVar}</td><td>${varDisplayMS}</td><td>${varDisplayMS}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayMS}</td><td>${mpDisplayMS}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayMS}</td><td>${brDisplayMS}</td></tr>`;
   html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_ms + var_ms_pl + mp_ms_pl + br_ms_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_ms + var_ms_pl + mp_ms_pl + br_ms_shortfall_pl)}</td></tr>`;
   
   if (msVol > 0) {
       html += `<tr><td class="row-title" style="color: var(--primary); padding-top: 16px;">${t.txtCn}</td><td colspan="2" style="text-align: center; font-weight: 800; color: var(--primary); font-size: 16px;">₹${Math.round(cn_ms).toLocaleString('en-IN')}</td></tr>`;
-      html += `<tr><td class="row-title text-danger">${t.txtTotalLfr}</td><td class="text-danger">₹${Math.round(totalLfrA_ms).toLocaleString('en-IN')}</td><td class="text-danger">₹${Math.round(totalLfrB_ms).toLocaleString('en-IN')}</td></tr>`;
+      html += `<tr><td class="row-title text-danger">${t.txtTotalLfr}</td><td class="text-danger" style="font-weight: 600;">₹${Math.round(totalLfrA_ms).toLocaleString('en-IN')}</td><td class="text-danger" style="font-weight: 600;">₹${Math.round(totalLfrB_ms).toLocaleString('en-IN')}</td></tr>`;
   }
 
   // HSD Rows
@@ -475,14 +467,14 @@ function calculateMargin() {
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffHsd)}</td><td>${fmt(diffHsd)}</td></tr>`;
   html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_hsd).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_hsd).replace('-','')}</td></tr>`;
   html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(netDmA_hsd)}</td><td style="font-weight: 600;">${fmt(netDmB_hsd)}</td></tr>`;
-  html += `<tr><td class="row-title text-info">${t.txtVar}</td><td>${varDisplayHSD}</td><td>${varDisplayHSD}</td></tr>`;
+  html += `<tr><td class="row-title text-success">${t.txtVar}</td><td>${varDisplayHSD}</td><td>${varDisplayHSD}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayHSD}</td><td>${mpDisplayHSD}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayHSD}</td><td>${brDisplayHSD}</td></tr>`;
   html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_hsd + var_hsd_pl + mp_hsd_pl + br_hsd_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_hsd + var_hsd_pl + mp_hsd_pl + br_hsd_shortfall_pl)}</td></tr>`;
   
   if (hsdVol > 0) {
       html += `<tr><td class="row-title" style="color: var(--primary); padding-top: 16px;">${t.txtCn}</td><td colspan="2" style="text-align: center; font-weight: 800; color: var(--primary); font-size: 16px;">₹${Math.round(cn_hsd).toLocaleString('en-IN')}</td></tr>`;
-      html += `<tr><td class="row-title text-danger">${t.txtTotalLfr}</td><td class="text-danger">₹${Math.round(totalLfrA_hsd).toLocaleString('en-IN')}</td><td class="text-danger">₹${Math.round(totalLfrB_hsd).toLocaleString('en-IN')}</td></tr>`;
+      html += `<tr><td class="row-title text-danger">${t.txtTotalLfr}</td><td class="text-danger" style="font-weight: 600;">₹${Math.round(totalLfrA_hsd).toLocaleString('en-IN')}</td><td class="text-danger" style="font-weight: 600;">₹${Math.round(totalLfrB_hsd).toLocaleString('en-IN')}</td></tr>`;
   }
   
   html += `</table></div>`;
