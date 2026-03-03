@@ -170,7 +170,7 @@
       <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter your invoice prices and optionally your volume & billable prices to see your exact final margin, including dynamic manpower and variable commissions.</p>
+    <p class="instruction" id="appInstruction">Enter your invoice prices and optionally your volume and billable prices to see your exact final margin, including dynamic manpower and variable commissions.</p>
     
     <div class="fuel-section">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
@@ -184,12 +184,12 @@
           <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblMsVol">Prev. Vol (KL) <span class="optional-tag">- Opt</span></label>
+          <label id="lblMsVol">Volume (KL) <span class="optional-tag">- Opt</span></label>
           <input type="number" id="msVol" placeholder="e.g. 20" step="1">
         </div>
         <div class="input-group">
           <label id="lblMsBill">Billable Price / KL <span class="optional-tag">- Opt</span></label>
-          <input type="number" id="msBill" placeholder="e.g. 15800" step="0.01">
+          <input type="number" id="msBill" placeholder="e.g. 15595.40" step="0.01">
         </div>
       </div>
     </div>
@@ -206,12 +206,12 @@
           <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblHsdVol">Prev. Vol (KL) <span class="optional-tag">- Opt</span></label>
+          <label id="lblHsdVol">Volume (KL) <span class="optional-tag">- Opt</span></label>
           <input type="number" id="hsdVol" placeholder="e.g. 120" step="1">
         </div>
         <div class="input-group">
           <label id="lblHsdBill">Billable Price / KL <span class="optional-tag">- Opt</span></label>
-          <input type="number" id="hsdBill" placeholder="e.g. 54100" step="0.01">
+          <input type="number" id="hsdBill" placeholder="e.g. 42004.51" step="0.01">
         </div>
       </div>
     </div>
@@ -220,6 +220,41 @@
   </div>
 
   <div id="result-container"></div>
+  
+  <div class="card slab-table no-print" style="padding: 20px;">
+    <div class="section-title" style="margin-bottom: 20px;" id="lblSlabTitle">Reference: Margin Slabs & Fixed Rates</div>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <table style="flex: 1; min-width: 250px; margin-bottom: 0;">
+        <tr><th colspan="3">Manpower Bonus Slabs</th></tr>
+        <tr><th>Combined Vol.</th><th>MS / Liter</th><th>HSD / Liter</th></tr>
+        <tr><td style="text-align: left;">Up to 400 KL</td><td>₹0.3796</td><td>₹0.2812</td></tr>
+        <tr><td style="text-align: left;">401 to 600 KL</td><td>₹0.3401</td><td>₹0.2519</td></tr>
+        <tr><td style="text-align: left;">601 to 800 KL</td><td>₹0.3007</td><td>₹0.2227</td></tr>
+        <tr><td style="text-align: left;">801 to 1000 KL</td><td>₹0.2612</td><td>₹0.1935</td></tr>
+        <tr><td style="text-align: left;">1001 to 1200 KL</td><td>₹0.2217</td><td>₹0.1642</td></tr>
+        <tr><td style="text-align: left;">1201 to 1400 KL</td><td>₹0.1822</td><td>₹0.1350</td></tr>
+      </table>
+
+      <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 20px;">
+        <table style="margin-bottom: 0;">
+          <tr><th colspan="2">Business Return Slabs</th></tr>
+          <tr><th>Combined Vol.</th><th>Amt. Per Month</th></tr>
+          <tr><td style="text-align: left;">&lt; 25 KL</td><td>₹12,000</td></tr>
+          <tr><td style="text-align: left;">&lt; 50 KL</td><td>₹20,000</td></tr>
+          <tr><td style="text-align: left;">&lt; 100 KL</td><td>₹24,000</td></tr>
+          <tr><td style="text-align: left;">&lt; 150 KL</td><td>₹26,000</td></tr>
+          <tr><td style="text-align: left;">&lt; 170 KL</td><td>₹27,500</td></tr>
+        </table>
+        
+        <table style="margin-bottom: 0;">
+          <tr><th colspan="2">Total Fixed Dealer Commission (1-Dec-24)</th></tr>
+          <tr><td style="text-align: left;">MS</td><td>₹3,144.03 / KL</td></tr>
+          <tr><td style="text-align: left;">HSD</td><td>₹2,332.51 / KL</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
   
   <div class="footer-links no-print">
     <button id="btnPrint" style="display: none;" onclick="window.print()">🖨️ Print Report</button>
@@ -231,12 +266,12 @@
 const i18n = {
   en: {
     appTitle: "Dealer Margin Calculator",
-    appInstruction: "Enter your invoice prices and optionally your volume & billable prices to see your exact final margin, including dynamic manpower and variable commissions.",
+    appInstruction: "Enter your invoice prices and optionally your volume and billable prices to see your exact final margin, including dynamic manpower and variable commissions.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "Selling Price (RSP)",
     lblInv: "Invoice Price",
-    lblVol: "Prev. Vol (KL) <span class='optional-tag'>- Opt</span>",
+    lblVol: "Volume (KL) <span class='optional-tag'>- Opt</span>",
     lblBill: "Billable Price / KL <span class='optional-tag'>- Opt</span>",
     btnCalc: "Calculate Margin",
     colDetails: "Breakdown Per Liter",
@@ -245,10 +280,11 @@ const i18n = {
     txtGross: "Base Profit (RSP - Inv)",
     txtLfr: "OMC LFR Deduction",
     txtNet: "Invoice Net Margin",
-    txtVar: "Variable Margin (0.859% / 0.257%)",
+    txtVar: "Variable Margin (0.870% / 0.266%)",
     txtBr: "Business Return (Shortfall)",
     txtMp: "Manpower Return",
     txtFinal: "Final Total Margin",
+    txtCn: "Expected Credit Note (Rs)",
     msgNoVol: "Volume omitted. Showing guaranteed base return.",
     msgVol: "Dynamic returns calculated for combined volume of",
     lblSlabTitle: "Reference: Margin Slabs & Fixed Rates",
@@ -261,7 +297,7 @@ const i18n = {
     lblDiesel: "🚛 డీజిల్ (HSD)",
     lblRsp: "అమ్మకపు ధర (RSP)",
     lblInv: "ఇన్వాయిస్ ధర",
-    lblVol: "గత నెల వాల్యూమ్ <span class='optional-tag'>- ఐచ్ఛికం</span>",
+    lblVol: "వాల్యూమ్ (KL) <span class='optional-tag'>- ఐచ్ఛికం</span>",
     lblBill: "బిల్ చేయదగిన ధర/KL <span class='optional-tag'>- ఐచ్ఛికం</span>",
     btnCalc: "మార్జిన్ లెక్కించు",
     colDetails: "లీటరుకు వివరాలు",
@@ -270,10 +306,11 @@ const i18n = {
     txtGross: "సాధారణ లాభం (RSP - Inv)",
     txtLfr: "LFR తగ్గింపు",
     txtNet: "ఇన్వాయిస్ నెట్ మార్జిన్",
-    txtVar: "వేరియబుల్ మార్జిన్",
+    txtVar: "వేరియబుల్ మార్జిన్ (0.870% / 0.266%)",
     txtBr: "బిజినెస్ రిటర్న్ (షార్ట్‌ఫాల్)",
     txtMp: "మ్యాన్‌పవర్ రిటర్న్",
     txtFinal: "తుది మార్జిన్",
+    txtCn: "ఎక్స్‌పెక్టెడ్ క్రెడిట్ నోట్ (Rs)",
     msgNoVol: "వాల్యూమ్ ఇవ్వబడలేదు. బేస్ రిటర్న్ మాత్రమే చూపబడింది.",
     msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా డైనమిక్ రిటర్న్ జోడించబడింది:",
     lblSlabTitle: "రిఫరెన్స్: మార్జిన్ స్లాబ్‌లు మరియు ఫిక్స్‌డ్ రేట్లు",
@@ -299,6 +336,7 @@ function switchLanguage() {
   document.querySelectorAll('#lblMsBill, #lblHsdBill').forEach(el => el.innerHTML = t.lblBill);
   
   document.getElementById('btnCalculate').innerText = t.btnCalc;
+  document.getElementById('lblSlabTitle').innerText = t.lblSlabTitle;
   
   if (document.getElementById("result-container").innerHTML !== "") {
     calculateMargin();
@@ -317,9 +355,6 @@ function calculateMargin() {
   let hsdBill = parseFloat(document.getElementById('hsdBill').value) || 0;
 
   let totalVol = msVol + hsdVol;
-  
-  // Show slabs if EITHER volume is missing, ensuring they always display unless fully completed
-  let showSlabs = (msVol === 0 || hsdVol === 0);
 
   const lfrA_ms = (443.50 * 1.18) / 1000;
   const lfrA_hsd = (369.58 * 1.18) / 1000;
@@ -343,7 +378,7 @@ function calculateMargin() {
 
   if (totalVol > 0) {
     // 1. Business Return Shortfall
-    const baseMS = msVol * 201.77;
+    const baseMS = msVol * 201.76;
     const baseHSD = hsdVol * 149.46;
     const baseTotal = baseMS + baseHSD;
     let totalBR = baseTotal;
@@ -383,8 +418,12 @@ function calculateMargin() {
   }
   
   // 3. Variable Dealer Commission (Based on Product Billable Price)
-  if (msBill > 0) var_ms_pl = (msBill * 0.00859) / 1000;
-  if (hsdBill > 0) var_hsd_pl = (hsdBill * 0.00257) / 1000;
+  if (msBill > 0) var_ms_pl = (msBill * 0.00870) / 1000;
+  if (hsdBill > 0) var_hsd_pl = (hsdBill * 0.00266) / 1000;
+  
+  // Expected End of Month Credit Note
+  let cn_ms = (msVol > 0) ? (br_ms_shortfall_pl + mp_ms_pl + var_ms_pl) * msVol * 1000 : 0;
+  let cn_hsd = (hsdVol > 0) ? (br_hsd_shortfall_pl + mp_hsd_pl + var_hsd_pl) * hsdVol * 1000 : 0;
 
   function fmt(num) {
     return (num < 0 ? "-" : "") + "₹" + Math.abs(num).toFixed(4);
@@ -420,6 +459,10 @@ function calculateMargin() {
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayMS}</td><td>${mpDisplayMS}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayMS}</td><td>${brDisplayMS}</td></tr>`;
   html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_ms + var_ms_pl + mp_ms_pl + br_ms_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_ms + var_ms_pl + mp_ms_pl + br_ms_shortfall_pl)}</td></tr>`;
+  
+  if (msVol > 0) {
+      html += `<tr><td class="row-title" style="color: var(--primary); padding-top: 16px;">${t.txtCn}</td><td colspan="2" style="text-align: center; font-weight: 800; color: var(--primary); font-size: 16px;">₹${cn_ms.toFixed(2)}</td></tr>`;
+  }
 
   // HSD Rows
   html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700; border-top: 4px solid var(--bg-main);">🚛 HSD (Diesel)</td></tr>`;
@@ -431,47 +474,11 @@ function calculateMargin() {
   html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayHSD}</td><td>${brDisplayHSD}</td></tr>`;
   html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_hsd + var_hsd_pl + mp_hsd_pl + br_hsd_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_hsd + var_hsd_pl + mp_hsd_pl + br_hsd_shortfall_pl)}</td></tr>`;
   
-  html += `</table></div>`;
-
-  if (showSlabs) {
-    html += `<div class="card slab-table no-print" style="padding: 20px;">
-      <div class="section-title" style="margin-bottom: 20px;">${t.lblSlabTitle}</div>
-      
-      <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-        <table style="flex: 1; min-width: 250px; margin-bottom: 0;">
-          <tr><th colspan="3">Manpower Bonus Slabs</th></tr>
-          <tr><th>Combined Vol.</th><th>MS / Liter</th><th>HSD / Liter</th></tr>
-          <tr><td style="text-align: left;">Up to 400 KL</td><td>₹0.3796</td><td>₹0.2812</td></tr>
-          <tr><td style="text-align: left;">401 to 600 KL</td><td>₹0.3401</td><td>₹0.2519</td></tr>
-          <tr><td style="text-align: left;">601 to 800 KL</td><td>₹0.3007</td><td>₹0.2227</td></tr>
-          <tr><td style="text-align: left;">801 to 1000 KL</td><td>₹0.2612</td><td>₹0.1935</td></tr>
-          <tr><td style="text-align: left;">1001 to 1200 KL</td><td>₹0.2217</td><td>₹0.1642</td></tr>
-          <tr><td style="text-align: left;">1201 to 1400 KL</td><td>₹0.1822</td><td>₹0.1350</td></tr>
-        </table>
-
-        <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 20px;">
-          <table style="margin-bottom: 0;">
-            <tr><th colspan="2">Business Return Slabs</th></tr>
-            <tr><th>Combined Vol.</th><th>Amt. Per Month</th></tr>
-            <tr><td style="text-align: left;">&lt; 25 KL</td><td>₹12,000</td></tr>
-            <tr><td style="text-align: left;">&lt; 50 KL</td><td>₹20,000</td></tr>
-            <tr><td style="text-align: left;">&lt; 100 KL</td><td>₹24,000</td></tr>
-            <tr><td style="text-align: left;">&lt; 150 KL</td><td>₹26,000</td></tr>
-            <tr><td style="text-align: left;">&lt; 170 KL</td><td>₹27,500</td></tr>
-          </table>
-          
-          <table style="margin-bottom: 0;">
-            <tr><th colspan="2">Base Business Return</th></tr>
-            <tr><td style="text-align: left;">MS</td><td>₹201.77 / KL</td></tr>
-            <tr><td style="text-align: left;">HSD</td><td>₹149.46 / KL</td></tr>
-            <tr><th colspan="2" style="border-top: 2px solid var(--border-color);">Fixed Rate (Excluding BR)</th></tr>
-            <tr><td style="text-align: left;">MS</td><td>₹2,472.97 / KL</td></tr>
-            <tr><td style="text-align: left;">HSD</td><td>₹1,881.92 / KL</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>`;
+  if (hsdVol > 0) {
+      html += `<tr><td class="row-title" style="color: var(--primary); padding-top: 16px;">${t.txtCn}</td><td colspan="2" style="text-align: center; font-weight: 800; color: var(--primary); font-size: 16px;">₹${cn_hsd.toFixed(2)}</td></tr>`;
   }
+  
+  html += `</table></div>`;
 
   document.getElementById("result-container").innerHTML = html;
   document.getElementById("btnPrint").style.display = "inline-block";
