@@ -32,7 +32,7 @@
   .container { 
     margin: 0 auto; 
     width: 100%; 
-    max-width: 640px; 
+    max-width: 680px; 
   }
 
   .card { 
@@ -49,7 +49,7 @@
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    margin-bottom: 24px; 
+    margin-bottom: 20px; 
   }
   
   .app-title { 
@@ -81,12 +81,18 @@
   .fuel-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
   .fuel-section:last-of-type { border-bottom: none; padding-bottom: 0; }
   
-  .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
   
-  .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  
+  /* Responsive Breakpoint for Mobile Inputs */
+  @media (max-width: 500px) {
+      .input-grid { grid-template-columns: 1fr; }
+  }
+
   .input-group { display: flex; flex-direction: column; gap: 6px; }
   
-  label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
   .optional-tag { font-weight: 400; text-transform: none; color: #a1a1a6; font-size: 11px; }
   
   input[type="number"] { 
@@ -119,8 +125,8 @@
 
   /* Results Table */
   .result-wrapper { margin-top: 24px; overflow-x: auto; }
-  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
-  th, td { padding: 14px 16px; text-align: right; border-bottom: 1px solid var(--border-color); }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background-color: #fff; }
+  th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--border-color); }
   th:first-child, td:first-child { text-align: left; }
   th { background-color: #fafafa; font-weight: 600; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
   tr:last-child td { border-bottom: none; }
@@ -181,7 +187,7 @@
           <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblMsVol">Prev. Month Vol (KL) <span class="optional-tag">- Optional</span></label>
+          <label id="lblMsVol">Prev. Vol (KL) <span class="optional-tag">- Optional</span></label>
           <input type="number" id="msVol" placeholder="e.g. 70" step="1">
         </div>
       </div>
@@ -199,7 +205,7 @@
           <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
         </div>
         <div class="input-group">
-          <label id="lblHsdVol">Prev. Month Vol (KL) <span class="optional-tag">- Optional</span></label>
+          <label id="lblHsdVol">Prev. Vol (KL) <span class="optional-tag">- Optional</span></label>
           <input type="number" id="hsdVol" placeholder="e.g. 270" step="1">
         </div>
       </div>
@@ -225,7 +231,7 @@ const i18n = {
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "Selling Price (RSP)",
     lblInv: "Invoice Price",
-    lblVol: "Prev. Month Vol (KL) <span class='optional-tag'>- Optional</span>",
+    lblVol: "Prev. Vol (KL) <span class='optional-tag'>- Optional</span>",
     btnCalc: "Calculate Margin",
     colDetails: "Breakdown Per Liter",
     colASite: "A-Site",
@@ -233,15 +239,12 @@ const i18n = {
     txtGross: "Base Profit (RSP - Inv)",
     txtLfr: "OMC LFR Deduction",
     txtNet: "Base Net Margin",
-    txtBr: "Business Return",
+    txtBr: "Business Return (Shortfall)",
     txtMp: "Manpower Return",
     txtFinal: "Final Total Margin",
     msgNoVol: "Volume not provided. Showing guaranteed base return.",
-    msgVol: "Business and Manpower returns added based on combined volume of",
-    lblSlabTitle: "Reference: Manpower Margin Slabs (If volume not entered)",
-    lblSlabVol: "Combined Volume (KL)",
-    lblSlabMs: "MS Bonus / Liter",
-    lblSlabHsd: "HSD Bonus / Liter",
+    msgVol: "Dynamic returns added based on combined volume of",
+    lblSlabTitle: "Reference: Margin Slabs & Fixed Rates",
     txtEnterVol: "Enter Vol"
   },
   te: {
@@ -259,15 +262,12 @@ const i18n = {
     txtGross: "సాధారణ లాభం (RSP - Inv)",
     txtLfr: "LFR తగ్గింపు",
     txtNet: "బేస్ నెట్ మార్జిన్",
-    txtBr: "బిజినెస్ రిటర్న్",
+    txtBr: "బిజినెస్ రిటర్న్ (షార్ట్‌ఫాల్)",
     txtMp: "మ్యాన్‌పవర్ రిటర్న్",
     txtFinal: "తుది మార్జిన్",
     msgNoVol: "వాల్యూమ్ ఇవ్వబడలేదు. బేస్ రిటర్న్ మాత్రమే చూపబడింది.",
-    msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా బిజినెస్ మరియు మ్యాన్‌పవర్ రిటర్న్ జోడించబడింది:",
-    lblSlabTitle: "రిఫరెన్స్: మ్యాన్‌పవర్ మార్జిన్ స్లాబ్‌లు",
-    lblSlabVol: "మొత్తం వాల్యూమ్ (KL)",
-    lblSlabMs: "MS బోనస్ / లీటరుకు",
-    lblSlabHsd: "HSD బోనస్ / లీటరుకు",
+    msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా డైనమిక్ రిటర్న్ జోడించబడింది:",
+    lblSlabTitle: "రిఫరెన్స్: మార్జిన్ స్లాబ్‌లు మరియు ఫిక్స్‌డ్ రేట్లు",
     txtEnterVol: "వాల్యూమ్ ఇవ్వండి"
   }
 };
@@ -315,8 +315,8 @@ function calculateMargin() {
   let diffMs = msRsp - msInv;
   let diffHsd = hsdRsp - hsdInv;
 
-  let br_ms_pl = 201.76 / 1000;
-  let br_hsd_pl = 149.46 / 1000;
+  let br_ms_shortfall_pl = 0;
+  let br_hsd_shortfall_pl = 0;
   let mp_ms_pl = 0;
   let mp_hsd_pl = 0;
 
@@ -332,11 +332,14 @@ function calculateMargin() {
     else if (totalVol <= 150) totalBR = Math.max(26000, baseTotal);
     else if (totalVol <= 170) totalBR = Math.max(27500, baseTotal);
 
-    let br_ms_total = baseTotal > 0 ? (totalBR * (baseMS / baseTotal)) : 0;
-    let br_hsd_total = baseTotal > 0 ? (totalBR * (baseHSD / baseTotal)) : 0;
+    let br_shortfall = totalBR - baseTotal;
 
-    if (msVol > 0) br_ms_pl = br_ms_total / (msVol * 1000);
-    if (hsdVol > 0) br_hsd_pl = br_hsd_total / (hsdVol * 1000);
+    if (br_shortfall > 0 && baseTotal > 0) {
+        let br_ms_total_shortfall = br_shortfall * (baseMS / baseTotal);
+        let br_hsd_total_shortfall = br_shortfall * (baseHSD / baseTotal);
+        if (msVol > 0) br_ms_shortfall_pl = br_ms_total_shortfall / (msVol * 1000);
+        if (hsdVol > 0) br_hsd_shortfall_pl = br_hsd_total_shortfall / (hsdVol * 1000);
+    }
 
     let slab_ms = 0, slab_hsd = 0;
     const slabs = [
@@ -367,13 +370,16 @@ function calculateMargin() {
   let mpDisplayMS = hasVolume ? `<span class="text-success">+${fmt(mp_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
   let mpDisplayHSD = hasVolume ? `<span class="text-success">+${fmt(mp_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
 
+  let brDisplayMS = hasVolume ? `<span class="text-success">+${fmt(br_ms_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let brDisplayHSD = hasVolume ? `<span class="text-success">+${fmt(br_hsd_shortfall_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 12px; font-weight: normal;">${t.txtEnterVol}</span>`;
+
   let html = `<div class="card result-wrapper">
-    <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 0;">${volMsg}</p>
-    <table>
+    <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">${volMsg}</p>
+    <table style="border: none;">
       <tr>
-        <th>${t.colDetails}</th>
-        <th style="color: #0056b3;" class="site-a-col">${t.colASite}</th>
-        <th style="color: #2d7a17;" class="site-b-col">${t.colBSite}</th>
+        <th style="background: none; border-bottom: 2px solid var(--border-color);">${t.colDetails}</th>
+        <th style="background: none; border-bottom: 2px solid var(--border-color); color: #0056b3;" class="site-a-col">${t.colASite}</th>
+        <th style="background: none; border-bottom: 2px solid var(--border-color); color: #2d7a17;" class="site-b-col">${t.colBSite}</th>
       </tr>`;
 
   // MS Rows
@@ -381,35 +387,60 @@ function calculateMargin() {
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffMs)}</td><td>${fmt(diffMs)}</td></tr>`;
   html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_ms).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_ms).replace('-','')}</td></tr>`;
   html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(diffMs - lfrA_ms)}</td><td style="font-weight: 600;">${fmt(diffMs - lfrB_ms)}</td></tr>`;
-  html += `<tr><td class="row-title text-success">${t.txtBr}</td><td class="text-success">+${fmt(br_ms_pl).replace('-','')}</td><td class="text-success">+${fmt(br_ms_pl).replace('-','')}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayMS}</td><td>${mpDisplayMS}</td></tr>`;
-  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffMs - lfrA_ms + br_ms_pl + mp_ms_pl)}</td><td style="color: #2d7a17;">${fmt(diffMs - lfrB_ms + br_ms_pl + mp_ms_pl)}</td></tr>`;
+  html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayMS}</td><td>${brDisplayMS}</td></tr>`;
+  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffMs - lfrA_ms + mp_ms_pl + br_ms_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(diffMs - lfrB_ms + mp_ms_pl + br_ms_shortfall_pl)}</td></tr>`;
 
   // HSD Rows
   html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700; border-top: 4px solid var(--bg-main);">🚛 HSD (Diesel)</td></tr>`;
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffHsd)}</td><td>${fmt(diffHsd)}</td></tr>`;
   html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_hsd).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_hsd).replace('-','')}</td></tr>`;
   html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(diffHsd - lfrA_hsd)}</td><td style="font-weight: 600;">${fmt(diffHsd - lfrB_hsd)}</td></tr>`;
-  html += `<tr><td class="row-title text-success">${t.txtBr}</td><td class="text-success">+${fmt(br_hsd_pl).replace('-','')}</td><td class="text-success">+${fmt(br_hsd_pl).replace('-','')}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtMp}</td><td>${mpDisplayHSD}</td><td>${mpDisplayHSD}</td></tr>`;
-  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffHsd - lfrA_hsd + br_hsd_pl + mp_hsd_pl)}</td><td style="color: #2d7a17;">${fmt(diffHsd - lfrB_hsd + br_hsd_pl + mp_hsd_pl)}</td></tr>`;
+  html += `<tr><td class="row-title text-success">${t.txtBr}</td><td>${brDisplayHSD}</td><td>${brDisplayHSD}</td></tr>`;
+  html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(diffHsd - lfrA_hsd + mp_hsd_pl + br_hsd_shortfall_pl)}</td><td style="color: #2d7a17;">${fmt(diffHsd - lfrB_hsd + mp_hsd_pl + br_hsd_shortfall_pl)}</td></tr>`;
   
   html += `</table></div>`;
 
   // Static Slabs Table (Shows only if volume is omitted)
   if (!hasVolume) {
-    html += `<div class="card slab-table no-print">
-      <div class="section-title">${t.lblSlabTitle}</div>
-      <table>
-        <tr><th>${t.lblSlabVol}</th><th style="text-align: center;">${t.lblSlabMs}</th><th style="text-align: center;">${t.lblSlabHsd}</th></tr>
-        <tr><td>Up to 400 KL</td><td style="text-align: center;">₹0.3796</td><td style="text-align: center;">₹0.2812</td></tr>
-        <tr><td>401 to 600 KL</td><td style="text-align: center;">₹0.3401</td><td style="text-align: center;">₹0.2519</td></tr>
-        <tr><td>601 to 800 KL</td><td style="text-align: center;">₹0.3007</td><td style="text-align: center;">₹0.2227</td></tr>
-        <tr><td>801 to 1000 KL</td><td style="text-align: center;">₹0.2612</td><td style="text-align: center;">₹0.1935</td></tr>
-        <tr><td>1001 to 1200 KL</td><td style="text-align: center;">₹0.2217</td><td style="text-align: center;">₹0.1642</td></tr>
-        <tr><td>1201 to 1400 KL</td><td style="text-align: center;">₹0.1822</td><td style="text-align: center;">₹0.1350</td></tr>
-      </table>
-      <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Note: Base Business Return lump sums may also slightly increase your per-liter rate depending on your volume.</p>
+    html += `<div class="card slab-table no-print" style="padding: 20px;">
+      <div class="section-title" style="margin-bottom: 20px;">${t.lblSlabTitle}</div>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <table style="flex: 1; min-width: 250px; margin-bottom: 0;">
+          <tr><th colspan="3" style="text-align: center;">Manpower Bonus Slabs</th></tr>
+          <tr><th>Combined Vol.</th><th style="text-align: center;">MS / Liter</th><th style="text-align: center;">HSD / Liter</th></tr>
+          <tr><td>Up to 400 KL</td><td style="text-align: center;">₹0.3796</td><td style="text-align: center;">₹0.2812</td></tr>
+          <tr><td>401 to 600 KL</td><td style="text-align: center;">₹0.3401</td><td style="text-align: center;">₹0.2519</td></tr>
+          <tr><td>601 to 800 KL</td><td style="text-align: center;">₹0.3007</td><td style="text-align: center;">₹0.2227</td></tr>
+          <tr><td>801 to 1000 KL</td><td style="text-align: center;">₹0.2612</td><td style="text-align: center;">₹0.1935</td></tr>
+          <tr><td>1001 to 1200 KL</td><td style="text-align: center;">₹0.2217</td><td style="text-align: center;">₹0.1642</td></tr>
+          <tr><td>1201 to 1400 KL</td><td style="text-align: center;">₹0.1822</td><td style="text-align: center;">₹0.1350</td></tr>
+        </table>
+
+        <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 20px;">
+          <table style="margin-bottom: 0;">
+            <tr><th colspan="2" style="text-align: center;">Business Return Slabs</th></tr>
+            <tr><th>Combined Vol.</th><th>Amt. Per Month</th></tr>
+            <tr><td>&lt; 25 KL</td><td>₹12,000</td></tr>
+            <tr><td>&lt; 50 KL</td><td>₹20,000</td></tr>
+            <tr><td>&lt; 100 KL</td><td>₹24,000</td></tr>
+            <tr><td>&lt; 150 KL</td><td>₹26,000</td></tr>
+            <tr><td>&lt; 170 KL</td><td>₹27,500</td></tr>
+          </table>
+          
+          <table style="margin-bottom: 0;">
+            <tr><th colspan="2" style="text-align: center;">Base Business Return</th></tr>
+            <tr><td>MS</td><td>₹201.76 / KL</td></tr>
+            <tr><td>HSD</td><td>₹149.46 / KL</td></tr>
+            <tr><th colspan="2" style="text-align: center; border-top: 2px solid var(--border-color);">Fixed Rate (Excluding BR)</th></tr>
+            <tr><td>MS</td><td>₹2,472.97 / KL</td></tr>
+            <tr><td>HSD</td><td>₹1,881.92 / KL</td></tr>
+          </table>
+        </div>
+      </div>
+      
     </div>`;
   }
 
