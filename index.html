@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Kishore Kumar Maistry">
-<title>OMC Credit Note & Margin Estimator</title>
+<title>LFR & Variable Dealer Margin Estimator</title>
 <style>
   :root {
     --primary: #007aff;
@@ -245,7 +245,7 @@
 <div class="container">
   <div class="card no-print">
     <div class="header-actions">
-      <h1 class="app-title" id="appTitle">OMC Credit Note & Margin Estimator</h1>
+      <h1 class="app-title" id="appTitle">LFR & Variable Dealer Margin Estimator</h1>
       <select id="langSelect" class="lang-select" onchange="switchLanguage()">
         <option value="en">English</option>
         <option value="te">తెలుగు</option>
@@ -360,7 +360,7 @@
   
   <div class="footer-links no-print">
     <button id="btnPrint" onclick="window.print()">🖨️ Print / Download</button>
-    <a href="mailto:kishore.kumar.m@live.com?subject=OMC Credit Note Estimator Issue">✉️ Report Issue</a>
+    <a href="mailto:kishore.kumar.m@live.com?subject=OMC Estimator Issue">✉️ Report Issue</a>
   </div>
 
   <div class="disclaimer no-print">
@@ -400,7 +400,7 @@ const stateVatRates = {
   "PB": { ms: 23.30, hsd: 11.10 },
   "RJ": { ms: 31.04, hsd: 19.30 },
   "SK": { ms: 20.00, hsd: 20.00 },
-  "TN": { ms: 34.00, hsd: 11.00 },
+  "TN": { ms: 13.00, hsd: 11.00 },
   "TS": { ms: 35.20, hsd: 27.00 },
   "TR": { ms: 20.00, hsd: 20.00 },
   "UP": { ms: 19.36, hsd: 17.08 },
@@ -438,7 +438,7 @@ function updateStateVat() {
 
 const i18n = {
   en: {
-    appTitle: "OMC Credit Note & Margin Estimator",
+    appTitle: "LFR & Variable Dealer Margin Estimator",
     appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-filled but remain fully editable for accuracy.",
     lblSelectState: "📍 Select State / UT for VAT:",
     txtStateWarning: "⚠️ Please select your State / UT to enable the calculator inputs.",
@@ -469,7 +469,7 @@ const i18n = {
     txtEnterVol: "Enter Vol"
   },
   te: {
-    appTitle: "OMC క్రెడిట్ నోట్ & మార్జిన్ ఎస్టిమేటర్",
+    appTitle: "LFR & వేరియబుల్ డీలర్ మార్జిన్ ఎస్టిమేటర్",
     appInstruction: "ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి ధరలు మరియు వాల్యూమ్‌ను నమోదు చేయండి. VAT ఆటోమేటిక్‌గా ఇవ్వబడింది కానీ మార్చుకోవచ్చు.",
     lblSelectState: "📍 VAT కోసం రాష్ట్రాన్ని ఎంచుకోండి:",
     txtStateWarning: "⚠️ క్యాలిక్యులేటర్‌ను ప్రారంభించడానికి దయచేసి మీ రాష్ట్రం / UTని ఎంచుకోండి.",
@@ -500,7 +500,7 @@ const i18n = {
     txtEnterVol: "వాల్యూమ్ ఇవ్వండి"
   },
   hi: {
-    appTitle: "OMC क्रेडिट नोट और मार्जिन एस्टीमेटर",
+    appTitle: "LFR और वेरिएबल डीलर मार्जिन एस्टीमेटर",
     appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट और परिवर्तनीय कमीशन भरे हुए हैं लेकिन आप उन्हें बदल सकते हैं।",
     lblSelectState: "📍 वैट के लिए राज्य / केंद्र शासित प्रदेश चुनें:",
     txtStateWarning: "⚠️ कैलकुलेटर को सक्षम करने के लिए कृपया अपना राज्य / केंद्र शासित प्रदेश चुनें।",
