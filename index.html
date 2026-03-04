@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Kishore Kumar Maistry">
-<title>Dealer Margin Calculator</title>
+<title>OMC Credit Note & Margin Estimator</title>
 <style>
   :root {
     --primary: #007aff;
@@ -47,24 +47,27 @@
   }
   
   .header-actions { 
+    position: relative; 
     display: flex; 
-    justify-content: space-between; 
+    justify-content: center; 
     align-items: center; 
     margin-bottom: 15px; 
-    flex-wrap: wrap;
-    gap: 15px;
+    min-height: 40px;
   }
   
   .app-title { 
-    font-size: 22px; 
+    font-size: 20px; 
     font-weight: 700; 
     margin: 0; 
     letter-spacing: -0.5px; 
     text-align: center;
-    flex: 1 1 auto;
+    padding: 0 100px;
   }
   
   .lang-select { 
+    position: absolute;
+    right: 0;
+    top: 0;
     background-color: #fff; 
     color: var(--primary); 
     border: 1px solid var(--primary); 
@@ -76,15 +79,15 @@
     outline: none;
   }
 
-  @media (max-width: 500px) {
-    .header-actions { flex-direction: column; }
+  @media (max-width: 600px) {
+    .header-actions { flex-direction: column; gap: 15px; }
+    .app-title { padding: 0; font-size: 18px; }
+    .lang-select { position: static; }
   }
 
   p.instruction { font-size: 14px; color: var(--text-muted); margin-top: 0; margin-bottom: 24px; line-height: 1.5; text-align: center; }
 
-  .settings-wrapper {
-    margin-bottom: 24px;
-  }
+  .settings-wrapper { margin-bottom: 24px; }
 
   .settings-bar {
     display: flex;
@@ -154,13 +157,18 @@
     box-sizing: border-box; 
     transition: border-color 0.2s, background-color 0.2s;
   }
-  input[type="number"]:focus:not(:read-only):not(:disabled) { outline: none; border-color: var(--primary); background-color: #fff; }
+  input[type="number"]:focus:not(:disabled) { outline: none; border-color: var(--primary); background-color: #fff; }
   
-  input[type="number"]:read-only, input[type="number"]:disabled {
+  input[type="number"]:disabled {
     background-color: var(--input-disabled);
     color: var(--text-disabled);
     cursor: not-allowed;
     border-color: #d1d1d6;
+  }
+
+  .editable-highlight {
+    border-left: 3px solid var(--primary) !important;
+    background-color: #fff !important;
   }
 
   .calc-btn { 
@@ -218,7 +226,7 @@
   .disclaimer {
     font-size: 10px;
     color: #a1a1a6;
-    text-align: center;
+    text-align: justify;
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid var(--border-color);
@@ -237,7 +245,7 @@
 <div class="container">
   <div class="card no-print">
     <div class="header-actions">
-      <h1 class="app-title" id="appTitle">Dealer Margin Calculator</h1>
+      <h1 class="app-title" id="appTitle">OMC Credit Note & Margin Estimator</h1>
       <select id="langSelect" class="lang-select" onchange="switchLanguage()">
         <option value="en">English</option>
         <option value="te">తెలుగు</option>
@@ -245,7 +253,7 @@
       </select>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.</p>
+    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-filled but remain fully editable for accuracy.</p>
     
     <div class="settings-wrapper">
       <div class="settings-bar">
@@ -310,11 +318,11 @@
         </div>
         <div class="input-group">
           <label id="lblMsVat">State VAT %</label>
-          <input type="number" id="msVat" value="0.00" step="0.01" readonly tabindex="-1">
+          <input type="number" id="msVat" class="user-input editable-highlight" value="0.00" step="0.01" disabled>
         </div>
         <div class="input-group">
           <label id="lblMsVar">Var. Comm (₹)</label>
-          <input type="number" id="msVar" value="11.97" step="0.01" readonly tabindex="-1">
+          <input type="number" id="msVar" class="user-input editable-highlight" value="11.97" step="0.01" disabled>
         </div>
       </div>
     </div>
@@ -336,11 +344,11 @@
         </div>
         <div class="input-group">
           <label id="lblHsdVat">State VAT %</label>
-          <input type="number" id="hsdVat" value="0.00" step="0.01" readonly tabindex="-1">
+          <input type="number" id="hsdVat" class="user-input editable-highlight" value="0.00" step="0.01" disabled>
         </div>
         <div class="input-group">
           <label id="lblHsdVar">Var. Comm (₹)</label>
-          <input type="number" id="hsdVar" value="31.06" step="0.01" readonly tabindex="-1">
+          <input type="number" id="hsdVar" class="user-input editable-highlight" value="31.06" step="0.01" disabled>
         </div>
       </div>
     </div>
@@ -352,7 +360,7 @@
   
   <div class="footer-links no-print">
     <button id="btnPrint" onclick="window.print()">🖨️ Print / Download</button>
-    <a href="mailto:kishore.kumar.m@live.com?subject=Dealer Margin Calculator">✉️ Report Issue</a>
+    <a href="mailto:kishore.kumar.m@live.com?subject=OMC Credit Note Estimator Issue">✉️ Report Issue</a>
   </div>
 
   <div class="disclaimer no-print">
@@ -392,7 +400,7 @@ const stateVatRates = {
   "PB": { ms: 23.30, hsd: 11.10 },
   "RJ": { ms: 31.04, hsd: 19.30 },
   "SK": { ms: 20.00, hsd: 20.00 },
-  "TN": { ms: 34.00, hsd: 25.00 },
+  "TN": { ms: 34.00, hsd: 11.00 },
   "TS": { ms: 35.20, hsd: 27.00 },
   "TR": { ms: 20.00, hsd: 20.00 },
   "UP": { ms: 19.36, hsd: 17.08 },
@@ -430,8 +438,8 @@ function updateStateVat() {
 
 const i18n = {
   en: {
-    appTitle: "Dealer Margin Calculator",
-    appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.",
+    appTitle: "OMC Credit Note & Margin Estimator",
+    appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-filled but remain fully editable for accuracy.",
     lblSelectState: "📍 Select State / UT for VAT:",
     txtStateWarning: "⚠️ Please select your State / UT to enable the calculator inputs.",
     lblPetrol: "🚗 Petrol (MS)",
@@ -461,8 +469,8 @@ const i18n = {
     txtEnterVol: "Enter Vol"
   },
   te: {
-    appTitle: "డీలర్ మార్జిన్ కాలిక్యులేటర్",
-    appInstruction: "ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి ధరలు మరియు వాల్యూమ్‌ను నమోదు చేయండి. VAT ఆటోమేటిక్‌గా లాక్ చేయబడింది.",
+    appTitle: "OMC క్రెడిట్ నోట్ & మార్జిన్ ఎస్టిమేటర్",
+    appInstruction: "ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి ధరలు మరియు వాల్యూమ్‌ను నమోదు చేయండి. VAT ఆటోమేటిక్‌గా ఇవ్వబడింది కానీ మార్చుకోవచ్చు.",
     lblSelectState: "📍 VAT కోసం రాష్ట్రాన్ని ఎంచుకోండి:",
     txtStateWarning: "⚠️ క్యాలిక్యులేటర్‌ను ప్రారంభించడానికి దయచేసి మీ రాష్ట్రం / UTని ఎంచుకోండి.",
     lblPetrol: "🚗 పెట్రోల్ (MS)",
@@ -492,8 +500,8 @@ const i18n = {
     txtEnterVol: "వాల్యూమ్ ఇవ్వండి"
   },
   hi: {
-    appTitle: "डीलर मार्जिन कैलकुलेटर",
-    appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट और परिवर्तनीय कमीशन ऑटो-लॉक हैं।",
+    appTitle: "OMC क्रेडिट नोट और मार्जिन एस्टीमेटर",
+    appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट और परिवर्तनीय कमीशन भरे हुए हैं लेकिन आप उन्हें बदल सकते हैं।",
     lblSelectState: "📍 वैट के लिए राज्य / केंद्र शासित प्रदेश चुनें:",
     txtStateWarning: "⚠️ कैलकुलेटर को सक्षम करने के लिए कृपया अपना राज्य / केंद्र शासित प्रदेश चुनें।",
     lblPetrol: "🚗 पेट्रोल (MS)",
