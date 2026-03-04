@@ -61,20 +61,19 @@
     text-align: center;
   }
   
-  .lang-btn { 
+  .lang-select { 
     position: absolute;
     right: 0;
-    background-color: transparent; 
+    background-color: #fff; 
     color: var(--primary); 
     border: 1px solid var(--primary); 
-    border-radius: 14px; 
-    padding: 6px 14px; 
+    border-radius: 10px; 
+    padding: 6px 10px; 
     font-size: 13px; 
     font-weight: 600; 
     cursor: pointer; 
-    transition: 0.2s; 
+    outline: none;
   }
-  .lang-btn:hover { background-color: var(--primary); color: #fff; }
 
   p.instruction { font-size: 14px; color: var(--text-muted); margin-top: 0; margin-bottom: 24px; line-height: 1.5; text-align: center; }
 
@@ -88,15 +87,17 @@
     border: 1px solid var(--border-color);
     margin-bottom: 24px;
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   .settings-bar label {
     font-size: 13px;
     color: var(--text-main);
     margin: 0;
+    font-weight: 600;
   }
 
-  select {
+  .settings-bar select {
     padding: 8px 12px;
     font-size: 14px;
     border-radius: 8px;
@@ -106,8 +107,9 @@
     outline: none;
     cursor: pointer;
     font-family: inherit;
+    max-width: 250px;
   }
-  select:focus { border-color: var(--primary); }
+  .settings-bar select:focus { border-color: var(--primary); }
 
   .fuel-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
   .fuel-section:last-of-type { border-bottom: none; padding-bottom: 0; }
@@ -176,11 +178,6 @@
   .text-info { color: var(--primary); }
   .final-row td { font-size: 15px; font-weight: 700; background-color: #fafafa; }
   
-  .slab-table { margin-top: 24px; font-size: 12px; }
-  .slab-table th { background-color: #f5f5f7; border-bottom: 1px solid var(--border-color); text-transform: none; text-align: center; }
-  .slab-table td { text-align: center; }
-  .slab-table tr:nth-child(even) td { background-color: #fafafa; }
-  
   .footer-links { text-align: center; margin-top: 20px; }
   .footer-links a, .footer-links button { 
     display: inline-block; 
@@ -207,21 +204,54 @@
   <div class="card no-print">
     <div class="header-actions">
       <h1 class="app-title" id="appTitle">Dealer Margin Calculator</h1>
-      <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
+      <select id="langSelect" class="lang-select" onchange="switchLanguage()">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+        <option value="hi">हिन्दी</option>
+      </select>
     </div>
     
     <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.</p>
     
     <div class="settings-bar">
-      <label id="lblSelectState">📍 Select State for VAT:</label>
+      <label id="lblSelectState">📍 Select State / UT for VAT:</label>
       <select id="stateSelect" onchange="updateStateVat()">
+        <option value="AN">Andaman and Nicobar Islands</option>
         <option value="AP" selected>Andhra Pradesh</option>
-        <option value="TS">Telangana</option>
-        <option value="KA">Karnataka</option>
-        <option value="TN">Tamil Nadu</option>
-        <option value="MH">Maharashtra</option>
+        <option value="AR">Arunachal Pradesh</option>
+        <option value="AS">Assam</option>
+        <option value="BR">Bihar</option>
+        <option value="CH">Chandigarh</option>
+        <option value="CT">Chhattisgarh</option>
+        <option value="DN">Dadra and Nagar Haveli and Daman and Diu</option>
         <option value="DL">Delhi</option>
+        <option value="GA">Goa</option>
+        <option value="GJ">Gujarat</option>
+        <option value="HR">Haryana</option>
+        <option value="HP">Himachal Pradesh</option>
+        <option value="JK">Jammu and Kashmir</option>
+        <option value="JH">Jharkhand</option>
+        <option value="KA">Karnataka</option>
+        <option value="KL">Kerala</option>
+        <option value="LA">Ladakh</option>
+        <option value="LD">Lakshadweep</option>
+        <option value="MP">Madhya Pradesh</option>
+        <option value="MH">Maharashtra</option>
+        <option value="MN">Manipur</option>
+        <option value="ML">Meghalaya</option>
+        <option value="MZ">Mizoram</option>
+        <option value="NL">Nagaland</option>
+        <option value="OR">Odisha</option>
+        <option value="PY">Puducherry</option>
+        <option value="PB">Punjab</option>
+        <option value="RJ">Rajasthan</option>
+        <option value="SK">Sikkim</option>
+        <option value="TN">Tamil Nadu</option>
+        <option value="TS">Telangana</option>
+        <option value="TR">Tripura</option>
         <option value="UP">Uttar Pradesh</option>
+        <option value="UT">Uttarakhand</option>
+        <option value="WB">West Bengal</option>
       </select>
     </div>
 
@@ -282,33 +312,6 @@
 
   <div id="result-container"></div>
   
-  <div class="card slab-table no-print" style="padding: 20px;">
-    <div class="section-title" style="margin-bottom: 20px;" id="lblSlabTitle">Reference: Margin Slabs (SDMS Logic)</div>
-    
-    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-      <table style="flex: 1; min-width: 250px; margin-bottom: 0;">
-        <tr><th colspan="3">Manpower Bonus Slabs</th></tr>
-        <tr><th>Combined Vol.</th><th>MS / Liter</th><th>HSD / Liter</th></tr>
-        <tr><td style="text-align: left;">Up to 400 KL</td><td>₹0.3796</td><td>₹0.2812</td></tr>
-        <tr><td style="text-align: left;">401 to 600 KL</td><td>₹0.3401</td><td>₹0.2519</td></tr>
-        <tr><td style="text-align: left;">601 to 800 KL</td><td>₹0.3007</td><td>₹0.2227</td></tr>
-        <tr><td style="text-align: left;">801 to 1000 KL</td><td>₹0.2612</td><td>₹0.1935</td></tr>
-      </table>
-
-      <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 20px;">
-        <table style="margin-bottom: 0;">
-          <tr><th colspan="2">Business Return Slabs</th></tr>
-          <tr><th>Combined Vol.</th><th>Amt. Per Month</th></tr>
-          <tr><td style="text-align: left;">&lt; 25 KL</td><td>₹12,000</td></tr>
-          <tr><td style="text-align: left;">&lt; 50 KL</td><td>₹20,000</td></tr>
-          <tr><td style="text-align: left;">&lt; 100 KL</td><td>₹24,000</td></tr>
-          <tr><td style="text-align: left;">&lt; 150 KL</td><td>₹26,000</td></tr>
-          <tr><td style="text-align: left;">&lt; 170 KL</td><td>₹27,500</td></tr>
-        </table>
-      </div>
-    </div>
-  </div>
-  
   <div class="footer-links no-print">
     <button id="btnPrint" style="display: none;" onclick="window.print()">🖨️ Print Report</button>
     <a href="mailto:kishore.kumar.m@live.com?subject=Dealer Margin Calculator">✉️ Report Issue</a>
@@ -316,14 +319,44 @@
 </div>
 
 <script>
+// VAT Rates dictionary. Replace placeholders with exact rates if required.
 const stateVatRates = {
+  "AN": { ms: 20.00, hsd: 20.00 },
   "AP": { ms: 31.00, hsd: 22.25 },
-  "TS": { ms: 35.20, hsd: 27.00 },
-  "KA": { ms: 25.92, hsd: 14.34 },
-  "TN": { ms: 34.00, hsd: 25.00 },
-  "MH": { ms: 26.00, hsd: 24.00 },
+  "AR": { ms: 20.00, hsd: 12.50 },
+  "AS": { ms: 32.66, hsd: 23.66 },
+  "BR": { ms: 26.80, hsd: 19.23 },
+  "CH": { ms: 22.45, hsd: 14.02 },
+  "CT": { ms: 25.00, hsd: 25.00 },
+  "DN": { ms: 20.00, hsd: 20.00 },
   "DL": { ms: 19.40, hsd: 16.75 },
-  "UP": { ms: 19.36, hsd: 17.08 }
+  "GA": { ms: 27.00, hsd: 23.00 },
+  "GJ": { ms: 20.10, hsd: 20.20 },
+  "HR": { ms: 25.00, hsd: 16.40 },
+  "HP": { ms: 25.00, hsd: 14.00 },
+  "JK": { ms: 24.00, hsd: 16.00 },
+  "JH": { ms: 22.00, hsd: 22.00 },
+  "KA": { ms: 25.92, hsd: 14.34 },
+  "KL": { ms: 30.08, hsd: 22.76 },
+  "LA": { ms: 20.00, hsd: 20.00 },
+  "LD": { ms: 20.00, hsd: 20.00 },
+  "MP": { ms: 33.00, hsd: 23.00 },
+  "MH": { ms: 26.00, hsd: 24.00 },
+  "MN": { ms: 36.50, hsd: 22.50 },
+  "ML": { ms: 20.00, hsd: 12.00 },
+  "MZ": { ms: 20.00, hsd: 12.00 },
+  "NL": { ms: 25.00, hsd: 16.50 },
+  "OR": { ms: 32.00, hsd: 28.00 },
+  "PY": { ms: 23.00, hsd: 17.15 },
+  "PB": { ms: 23.30, hsd: 11.10 },
+  "RJ": { ms: 31.04, hsd: 19.30 },
+  "SK": { ms: 20.00, hsd: 20.00 },
+  "TN": { ms: 34.00, hsd: 25.00 },
+  "TS": { ms: 35.20, hsd: 27.00 },
+  "TR": { ms: 20.00, hsd: 20.00 },
+  "UP": { ms: 19.36, hsd: 17.08 },
+  "UT": { ms: 25.00, hsd: 17.48 },
+  "WB": { ms: 25.00, hsd: 17.00 }
 };
 
 function updateStateVat() {
@@ -335,7 +368,6 @@ function updateStateVat() {
     document.getElementById('hsdVat').value = rates.hsd.toFixed(2);
   }
   
-  // If results exist, recalculate automatically
   if (document.getElementById("result-container").innerHTML !== "") {
     calculateMargin();
   }
@@ -345,7 +377,7 @@ const i18n = {
   en: {
     appTitle: "Dealer Margin Calculator",
     appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.",
-    lblSelectState: "📍 Select State for VAT:",
+    lblSelectState: "📍 Select State / UT for VAT:",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "RSP",
@@ -401,16 +433,45 @@ const i18n = {
     txtTotalLfrA: "మొత్తం LFR తగ్గింపు (A-సైట్)",
     txtTotalLfrB: "మొత్తం LFR తగ్గింపు (B-సైట్)",
     txtEnterVol: "వాల్యూమ్ ఇవ్వండి"
+  },
+  hi: {
+    appTitle: "डीलर मार्जिन कैलकुलेटर",
+    appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट और परिवर्तनीय कमीशन ऑटो-लॉक हैं।",
+    lblSelectState: "📍 वैट के लिए राज्य चुनें:",
+    lblPetrol: "🚗 पेट्रोल (MS)",
+    lblDiesel: "🚛 डीजल (HSD)",
+    lblRsp: "आरएसपी (RSP)",
+    lblInv: "चालान (Invoice)",
+    lblVat: "राज्य वैट %",
+    lblVar: "वेरिएबल कमीशन (₹)",
+    lblVol: "मात्रा (KL) <span class='optional-tag'>- वैकल्पिक</span>",
+    btnCalc: "मार्जिन की गणना करें",
+    colDetails: "प्रति लीटर विवरण",
+    colASite: "A-साइट",
+    colBSite: "B-साइट",
+    txtGross: "सकल लाभ (RSP - Inv)",
+    txtLfr: "OMC LFR कटौती",
+    txtNet: "शुद्ध दैनिक मार्जिन",
+    txtCnPerLit: "क्रेडिट नोट मार्जिन (वैट सहित)",
+    txtFinal: "अंतिम कुल मार्जिन",
+    txtCn: "अपेक्षित क्रेडिट नोट (₹)",
+    txtTotalLfr: "कुल मासिक LFR कटौती (₹)",
+    msgNoVol: "मात्रा नहीं दी गई। केवल दैनिक मार्जिन दिखा रहा है।",
+    msgVol: "कुल मात्रा के आधार पर गणना की गई:",
+    lblSummaryTitle: "मासिक संयुक्त सारांश",
+    txtTotalCn: "कुल संयुक्त क्रेडिट नोट (MS + HSD)",
+    txtTotalLfrA: "कुल LFR कटौती (A-साइट)",
+    txtTotalLfrB: "कुल LFR कटौती (B-साइट)",
+    txtEnterVol: "मात्रा दर्ज करें"
   }
 };
 
 let currentLang = 'en';
 
 function switchLanguage() {
-  currentLang = currentLang === 'en' ? 'te' : 'en';
+  currentLang = document.getElementById('langSelect').value;
   const t = i18n[currentLang];
   
-  document.getElementById('langToggle').innerText = currentLang === 'en' ? 'తెలుగు' : 'English';
   document.getElementById('appTitle').innerText = t.appTitle;
   document.getElementById('appInstruction').innerText = t.appInstruction;
   document.getElementById('lblSelectState').innerText = t.lblSelectState;
@@ -445,13 +506,11 @@ function calculateMargin() {
 
   let totalVol = msVol + hsdVol;
 
-  // LFR deduction logic: A-Site + 18% GST, B-Site inclusive of GST
   const lfrA_ms = (443.50 * 1.18) / 1000;
   const lfrA_hsd = (369.58 * 1.18) / 1000;
   const lfrB_ms = 235.96 / 1000;
   const lfrB_hsd = 196.63 / 1000;
 
-  // Daily Gross and Net Margins
   let diffMs = msRsp - msInv;
   let diffHsd = hsdRsp - hsdInv;
   
@@ -527,14 +586,14 @@ function calculateMargin() {
   let combinedCN = cn_ms_total + cn_hsd_total;
 
   function fmt(num) {
-    return (num < 0 ? "-" : "") + "₹" + Math.abs(num).toFixed(4);
+    return (num < 0 ? "" : "") + "₹" + Math.abs(num).toFixed(4);
   }
 
   const t = i18n[currentLang];
   const volMsg = (totalVol > 0) ? `${t.msgVol} <b>${totalVol} KL</b>` : t.msgNoVol;
 
-  let cnDisplayMS = (msVol > 0) ? `<span class="text-success">+${fmt(cn_ms_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
-  let cnDisplayHSD = (hsdVol > 0) ? `<span class="text-success">+${fmt(cn_hsd_pl).replace('-','')}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let cnDisplayMS = (msVol > 0) ? `<span class="text-success">+${fmt(cn_ms_pl)}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
+  let cnDisplayHSD = (hsdVol > 0) ? `<span class="text-success">+${fmt(cn_hsd_pl)}</span>` : `<span style="color: #a1a1a6; font-size: 11px; font-weight: normal;">${t.txtEnterVol}</span>`;
 
   let html = `<div class="card result-wrapper">
     <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">${volMsg}</p>
@@ -546,9 +605,9 @@ function calculateMargin() {
       </tr>`;
 
   // MS Rows
-  html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700;">🚗 MS (Petrol)</td></tr>`;
+  html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700;">🚗 MS</td></tr>`;
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffMs)}</td><td>${fmt(diffMs)}</td></tr>`;
-  html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_ms).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_ms).replace('-','')}</td></tr>`;
+  html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_ms)}</td><td class="text-danger">-${fmt(lfrB_ms)}</td></tr>`;
   html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(netDmA_ms)}</td><td style="font-weight: 600;">${fmt(netDmB_ms)}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtCnPerLit}</td><td class="text-success">${cnDisplayMS}</td><td class="text-success">${cnDisplayMS}</td></tr>`;
   html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_ms + cn_ms_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_ms + cn_ms_pl)}</td></tr>`;
@@ -559,9 +618,9 @@ function calculateMargin() {
   }
 
   // HSD Rows
-  html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700; border-top: 4px solid var(--bg-main);">🚛 HSD (Diesel)</td></tr>`;
+  html += `<tr><td colspan="3" style="background: #fafafa; text-align: center; font-weight: 700; border-top: 4px solid var(--bg-main);">🚛 HSD</td></tr>`;
   html += `<tr><td class="row-title">${t.txtGross}</td><td>${fmt(diffHsd)}</td><td>${fmt(diffHsd)}</td></tr>`;
-  html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_hsd).replace('-','')}</td><td class="text-danger">-${fmt(lfrB_hsd).replace('-','')}</td></tr>`;
+  html += `<tr><td class="row-title text-danger">${t.txtLfr}</td><td class="text-danger">-${fmt(lfrA_hsd)}</td><td class="text-danger">-${fmt(lfrB_hsd)}</td></tr>`;
   html += `<tr><td class="row-title">${t.txtNet}</td><td style="font-weight: 600;">${fmt(netDmA_hsd)}</td><td style="font-weight: 600;">${fmt(netDmB_hsd)}</td></tr>`;
   html += `<tr><td class="row-title text-success">${t.txtCnPerLit}</td><td class="text-success">${cnDisplayHSD}</td><td class="text-success">${cnDisplayHSD}</td></tr>`;
   html += `<tr class="final-row"><td class="row-title">${t.txtFinal}</td><td style="color: #0056b3;">${fmt(netDmA_hsd + cn_hsd_pl)}</td><td style="color: #2d7a17;">${fmt(netDmB_hsd + cn_hsd_pl)}</td></tr>`;
