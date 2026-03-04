@@ -16,6 +16,7 @@
     --border-color: #d2d2d7;
     --success: #34c759;
     --danger: #ff3b30;
+    --warning: #ff9500;
     --a-site-bg: #f0f8ff;
     --b-site-bg: #f2fce8;
     --input-disabled: #e5e5ea;
@@ -46,11 +47,12 @@
   }
   
   .header-actions { 
-    position: relative; 
     display: flex; 
-    justify-content: center; 
+    justify-content: space-between; 
     align-items: center; 
-    margin-bottom: 10px; 
+    margin-bottom: 15px; 
+    flex-wrap: wrap;
+    gap: 15px;
   }
   
   .app-title { 
@@ -59,11 +61,10 @@
     margin: 0; 
     letter-spacing: -0.5px; 
     text-align: center;
+    flex: 1 1 auto;
   }
   
   .lang-select { 
-    position: absolute;
-    right: 0;
     background-color: #fff; 
     color: var(--primary); 
     border: 1px solid var(--primary); 
@@ -75,7 +76,15 @@
     outline: none;
   }
 
+  @media (max-width: 500px) {
+    .header-actions { flex-direction: column; }
+  }
+
   p.instruction { font-size: 14px; color: var(--text-muted); margin-top: 0; margin-bottom: 24px; line-height: 1.5; text-align: center; }
+
+  .settings-wrapper {
+    margin-bottom: 24px;
+  }
 
   .settings-bar {
     display: flex;
@@ -85,7 +94,6 @@
     padding: 12px 20px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
-    margin-bottom: 24px;
     gap: 12px;
     flex-wrap: wrap;
   }
@@ -110,6 +118,14 @@
     max-width: 250px;
   }
   .settings-bar select:focus { border-color: var(--primary); }
+
+  .state-warning {
+    color: var(--danger);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 10px;
+  }
 
   .fuel-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
   .fuel-section:last-of-type { border-bottom: none; padding-bottom: 0; }
@@ -138,9 +154,9 @@
     box-sizing: border-box; 
     transition: border-color 0.2s, background-color 0.2s;
   }
-  input[type="number"]:focus:not(:read-only) { outline: none; border-color: var(--primary); background-color: #fff; }
+  input[type="number"]:focus:not(:read-only):not(:disabled) { outline: none; border-color: var(--primary); background-color: #fff; }
   
-  input[type="number"]:read-only {
+  input[type="number"]:read-only, input[type="number"]:disabled {
     background-color: var(--input-disabled);
     color: var(--text-disabled);
     cursor: not-allowed;
@@ -157,10 +173,15 @@
     border: none; 
     border-radius: 12px; 
     cursor: pointer; 
-    transition: transform 0.1s, background-color 0.2s; 
+    transition: transform 0.1s, background-color 0.2s, opacity 0.2s; 
   }
-  .calc-btn:active { transform: scale(0.98); }
-  .calc-btn:hover { background-color: var(--primary-hover); }
+  .calc-btn:active:not(:disabled) { transform: scale(0.98); }
+  .calc-btn:hover:not(:disabled) { background-color: var(--primary-hover); }
+  .calc-btn:disabled {
+    background-color: var(--text-disabled);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
 
   .result-wrapper { margin-top: 24px; overflow-x: auto; }
   table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background-color: #fff; }
@@ -226,46 +247,50 @@
     
     <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.</p>
     
-    <div class="settings-bar">
-      <label id="lblSelectState">📍 Select State / UT for VAT:</label>
-      <select id="stateSelect" onchange="updateStateVat()">
-        <option value="AN">Andaman and Nicobar Islands</option>
-        <option value="AP" selected>Andhra Pradesh</option>
-        <option value="AR">Arunachal Pradesh</option>
-        <option value="AS">Assam</option>
-        <option value="BR">Bihar</option>
-        <option value="CH">Chandigarh</option>
-        <option value="CT">Chhattisgarh</option>
-        <option value="DN">Dadra and Nagar Haveli and Daman and Diu</option>
-        <option value="DL">Delhi</option>
-        <option value="GA">Goa</option>
-        <option value="GJ">Gujarat</option>
-        <option value="HR">Haryana</option>
-        <option value="HP">Himachal Pradesh</option>
-        <option value="JK">Jammu and Kashmir</option>
-        <option value="JH">Jharkhand</option>
-        <option value="KA">Karnataka</option>
-        <option value="KL">Kerala</option>
-        <option value="LA">Ladakh</option>
-        <option value="LD">Lakshadweep</option>
-        <option value="MP">Madhya Pradesh</option>
-        <option value="MH">Maharashtra</option>
-        <option value="MN">Manipur</option>
-        <option value="ML">Meghalaya</option>
-        <option value="MZ">Mizoram</option>
-        <option value="NL">Nagaland</option>
-        <option value="OR">Odisha</option>
-        <option value="PY">Puducherry</option>
-        <option value="PB">Punjab</option>
-        <option value="RJ">Rajasthan</option>
-        <option value="SK">Sikkim</option>
-        <option value="TN">Tamil Nadu</option>
-        <option value="TS">Telangana</option>
-        <option value="TR">Tripura</option>
-        <option value="UP">Uttar Pradesh</option>
-        <option value="UT">Uttarakhand</option>
-        <option value="WB">West Bengal</option>
-      </select>
+    <div class="settings-wrapper">
+      <div class="settings-bar">
+        <label id="lblSelectState">📍 Select State / UT for VAT:</label>
+        <select id="stateSelect" onchange="updateStateVat()">
+          <option value="" disabled selected>-- Select State / UT --</option>
+          <option value="AN">Andaman and Nicobar Islands</option>
+          <option value="AP">Andhra Pradesh</option>
+          <option value="AR">Arunachal Pradesh</option>
+          <option value="AS">Assam</option>
+          <option value="BR">Bihar</option>
+          <option value="CH">Chandigarh</option>
+          <option value="CT">Chhattisgarh</option>
+          <option value="DN">Dadra and Nagar Haveli and Daman and Diu</option>
+          <option value="DL">Delhi</option>
+          <option value="GA">Goa</option>
+          <option value="GJ">Gujarat</option>
+          <option value="HR">Haryana</option>
+          <option value="HP">Himachal Pradesh</option>
+          <option value="JK">Jammu and Kashmir</option>
+          <option value="JH">Jharkhand</option>
+          <option value="KA">Karnataka</option>
+          <option value="KL">Kerala</option>
+          <option value="LA">Ladakh</option>
+          <option value="LD">Lakshadweep</option>
+          <option value="MP">Madhya Pradesh</option>
+          <option value="MH">Maharashtra</option>
+          <option value="MN">Manipur</option>
+          <option value="ML">Meghalaya</option>
+          <option value="MZ">Mizoram</option>
+          <option value="NL">Nagaland</option>
+          <option value="OR">Odisha</option>
+          <option value="PY">Puducherry</option>
+          <option value="PB">Punjab</option>
+          <option value="RJ">Rajasthan</option>
+          <option value="SK">Sikkim</option>
+          <option value="TN">Tamil Nadu</option>
+          <option value="TS">Telangana</option>
+          <option value="TR">Tripura</option>
+          <option value="UP">Uttar Pradesh</option>
+          <option value="UT">Uttarakhand</option>
+          <option value="WB">West Bengal</option>
+        </select>
+      </div>
+      <div id="stateWarning" class="state-warning">⚠️ Please select your State / UT to enable the calculator inputs.</div>
     </div>
 
     <div class="fuel-section">
@@ -273,19 +298,19 @@
       <div class="input-grid">
         <div class="input-group">
           <label id="lblMsRsp">RSP</label>
-          <input type="number" id="msRsp" placeholder="e.g. 109.91" step="0.01">
+          <input type="number" id="msRsp" class="user-input" placeholder="e.g. 109.91" step="0.01" disabled>
         </div>
         <div class="input-group">
           <label id="lblMsInv">Invoice</label>
-          <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
+          <input type="number" id="msInvoice" class="user-input" placeholder="e.g. 105.85" step="0.01" disabled>
         </div>
         <div class="input-group vol-input">
           <label id="lblMsVol">Vol (KL) <span class="optional-tag">- Opt</span></label>
-          <input type="number" id="msVol" placeholder="e.g. 30" step="1">
+          <input type="number" id="msVol" class="user-input" placeholder="e.g. 30" step="1" disabled>
         </div>
         <div class="input-group">
           <label id="lblMsVat">State VAT %</label>
-          <input type="number" id="msVat" value="31.00" step="0.01" readonly tabindex="-1">
+          <input type="number" id="msVat" value="0.00" step="0.01" readonly tabindex="-1">
         </div>
         <div class="input-group">
           <label id="lblMsVar">Var. Comm (₹)</label>
@@ -299,19 +324,19 @@
       <div class="input-grid">
         <div class="input-group">
           <label id="lblHsdRsp">RSP</label>
-          <input type="number" id="hsdRsp" placeholder="e.g. 97.73" step="0.01">
+          <input type="number" id="hsdRsp" class="user-input" placeholder="e.g. 97.73" step="0.01" disabled>
         </div>
         <div class="input-group">
           <label id="lblHsdInv">Invoice</label>
-          <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
+          <input type="number" id="hsdInvoice" class="user-input" placeholder="e.g. 95.14" step="0.01" disabled>
         </div>
         <div class="input-group vol-input">
           <label id="lblHsdVol">Vol (KL) <span class="optional-tag">- Opt</span></label>
-          <input type="number" id="hsdVol" placeholder="e.g. 135" step="1">
+          <input type="number" id="hsdVol" class="user-input" placeholder="e.g. 135" step="1" disabled>
         </div>
         <div class="input-group">
           <label id="lblHsdVat">State VAT %</label>
-          <input type="number" id="hsdVat" value="22.25" step="0.01" readonly tabindex="-1">
+          <input type="number" id="hsdVat" value="0.00" step="0.01" readonly tabindex="-1">
         </div>
         <div class="input-group">
           <label id="lblHsdVar">Var. Comm (₹)</label>
@@ -320,7 +345,7 @@
       </div>
     </div>
     
-    <button id="btnCalculate" class="calc-btn" onclick="calculateMargin()">Calculate Margin</button>
+    <button id="btnCalculate" class="calc-btn" onclick="calculateMargin()" disabled>Calculate Margin</button>
   </div>
 
   <div id="result-container"></div>
@@ -331,7 +356,7 @@
   </div>
 
   <div class="disclaimer no-print">
-    <strong>Disclaimer:</strong> This tool is provided for informational purposes only. While every effort has been made to ensure accuracy based on standard OMC pricing logic and slab structures, actual credit notes and final margins may vary due to dynamic backend pricing, changing tax laws, and specific OMC policies. The developer assumes no liability for business decisions made based on these calculations. If you utilize, share, or reproduce this calculation methodology or software tool in any format, strict and visible credit must be given to the original author (Kishore Kumar Maistry).
+    <strong>Disclaimer:</strong> This tool is provided for informational purposes only. The Oil Marketing Companies (OMCs) have never officially shared the exact mathematical formula for calculating the variable dealer margin. Every effort has been made to reverse-engineer and come as close as possible to the internal OMC pricing logic; hence, there may be a slight difference between the calculated variable margin here and the actual credit note received. Actual final margins may also vary due to dynamic backend pricing, changing tax laws, and specific OMC policies. The developer assumes no liability for business decisions made based on these calculations. If you utilize, share, or reproduce this calculation methodology or software tool in any format, strict and visible credit must be given to the original author (Kishore Kumar Maistry).
   </div>
 </div>
 
@@ -377,8 +402,22 @@ const stateVatRates = {
 
 function updateStateVat() {
   const selectedState = document.getElementById('stateSelect').value;
-  const rates = stateVatRates[selectedState];
+  const warningEl = document.getElementById('stateWarning');
+  const userInputs = document.querySelectorAll('.user-input');
+  const calcBtn = document.getElementById('btnCalculate');
   
+  if (!selectedState) {
+    warningEl.style.display = 'block';
+    userInputs.forEach(el => el.disabled = true);
+    calcBtn.disabled = true;
+    return;
+  }
+
+  warningEl.style.display = 'none';
+  userInputs.forEach(el => el.disabled = false);
+  calcBtn.disabled = false;
+
+  const rates = stateVatRates[selectedState];
   if (rates) {
     document.getElementById('msVat').value = rates.ms.toFixed(2);
     document.getElementById('hsdVat').value = rates.hsd.toFixed(2);
@@ -394,6 +433,7 @@ const i18n = {
     appTitle: "Dealer Margin Calculator",
     appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.",
     lblSelectState: "📍 Select State / UT for VAT:",
+    txtStateWarning: "⚠️ Please select your State / UT to enable the calculator inputs.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "RSP",
@@ -424,6 +464,7 @@ const i18n = {
     appTitle: "డీలర్ మార్జిన్ కాలిక్యులేటర్",
     appInstruction: "ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి ధరలు మరియు వాల్యూమ్‌ను నమోదు చేయండి. VAT ఆటోమేటిక్‌గా లాక్ చేయబడింది.",
     lblSelectState: "📍 VAT కోసం రాష్ట్రాన్ని ఎంచుకోండి:",
+    txtStateWarning: "⚠️ క్యాలిక్యులేటర్‌ను ప్రారంభించడానికి దయచేసి మీ రాష్ట్రం / UTని ఎంచుకోండి.",
     lblPetrol: "🚗 పెట్రోల్ (MS)",
     lblDiesel: "🚛 డీజిల్ (HSD)",
     lblRsp: "RSP",
@@ -453,7 +494,8 @@ const i18n = {
   hi: {
     appTitle: "डीलर मार्जिन कैलकुलेटर",
     appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट और परिवर्तनीय कमीशन ऑटो-लॉक हैं।",
-    lblSelectState: "📍 वैट के लिए राज्य चुनें:",
+    lblSelectState: "📍 वैट के लिए राज्य / केंद्र शासित प्रदेश चुनें:",
+    txtStateWarning: "⚠️ कैलकुलेटर को सक्षम करने के लिए कृपया अपना राज्य / केंद्र शासित प्रदेश चुनें।",
     lblPetrol: "🚗 पेट्रोल (MS)",
     lblDiesel: "🚛 डीजल (HSD)",
     lblRsp: "आरएसपी (RSP)",
@@ -491,6 +533,7 @@ function switchLanguage() {
   document.getElementById('appTitle').innerText = t.appTitle;
   document.getElementById('appInstruction').innerText = t.appInstruction;
   document.getElementById('lblSelectState').innerText = t.lblSelectState;
+  document.getElementById('stateWarning').innerText = t.txtStateWarning;
   document.getElementById('lblPetrol').innerText = t.lblPetrol;
   document.getElementById('lblDiesel').innerText = t.lblDiesel;
   
@@ -675,7 +718,7 @@ function calculateMargin() {
   document.getElementById("result-container").innerHTML = html;
 }
 
-// Initialize on load
+// Initialize on load to enforce state selection lock
 updateStateVat();
 </script>
 
