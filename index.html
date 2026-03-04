@@ -18,6 +18,8 @@
     --danger: #ff3b30;
     --a-site-bg: #f0f8ff;
     --b-site-bg: #f2fce8;
+    --input-disabled: #e5e5ea;
+    --text-disabled: #8e8e93;
   }
 
   body { 
@@ -32,7 +34,7 @@
   .container { 
     margin: 0 auto; 
     width: 100%; 
-    max-width: 720px; 
+    max-width: 760px; 
   }
 
   .card { 
@@ -48,7 +50,7 @@
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    margin-bottom: 20px; 
+    margin-bottom: 10px; 
   }
   
   .app-title { 
@@ -75,6 +77,37 @@
   .lang-btn:hover { background-color: var(--primary); color: #fff; }
 
   p.instruction { font-size: 14px; color: var(--text-muted); margin-top: 0; margin-bottom: 24px; line-height: 1.5; text-align: center; }
+
+  .settings-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 24px;
+    gap: 12px;
+  }
+
+  .settings-bar label {
+    font-size: 13px;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+    color: var(--text-main);
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  select:focus { border-color: var(--primary); }
 
   .fuel-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
   .fuel-section:last-of-type { border-bottom: none; padding-bottom: 0; }
@@ -103,7 +136,14 @@
     box-sizing: border-box; 
     transition: border-color 0.2s, background-color 0.2s;
   }
-  input[type="number"]:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+  input[type="number"]:focus:not(:read-only) { outline: none; border-color: var(--primary); background-color: #fff; }
+  
+  input[type="number"]:read-only {
+    background-color: var(--input-disabled);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    border-color: #d1d1d6;
+  }
 
   .calc-btn { 
     width: 100%; 
@@ -170,8 +210,21 @@
       <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. The system automatically apportions Business Return Shortfalls and VAT.</p>
+    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.</p>
     
+    <div class="settings-bar">
+      <label id="lblSelectState">📍 Select State for VAT:</label>
+      <select id="stateSelect" onchange="updateStateVat()">
+        <option value="AP" selected>Andhra Pradesh</option>
+        <option value="TS">Telangana</option>
+        <option value="KA">Karnataka</option>
+        <option value="TN">Tamil Nadu</option>
+        <option value="MH">Maharashtra</option>
+        <option value="DL">Delhi</option>
+        <option value="UP">Uttar Pradesh</option>
+      </select>
+    </div>
+
     <div class="fuel-section">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
       <div class="input-grid">
@@ -183,17 +236,17 @@
           <label id="lblMsInv">Invoice</label>
           <input type="number" id="msInvoice" placeholder="e.g. 105.85" step="0.01">
         </div>
-        <div class="input-group">
-          <label id="lblMsVat">State VAT %</label>
-          <input type="number" id="msVat" value="31.00" step="0.01">
-        </div>
-        <div class="input-group">
-          <label id="lblMsVar">Var. Comm (₹/KL)</label>
-          <input type="number" id="msVar" value="11.97" step="0.01">
-        </div>
         <div class="input-group vol-input">
           <label id="lblMsVol">Vol (KL) <span class="optional-tag">- Opt</span></label>
           <input type="number" id="msVol" placeholder="e.g. 30" step="1">
+        </div>
+        <div class="input-group">
+          <label id="lblMsVat">State VAT %</label>
+          <input type="number" id="msVat" value="31.00" step="0.01" readonly tabindex="-1">
+        </div>
+        <div class="input-group">
+          <label id="lblMsVar">Var. Comm (₹)</label>
+          <input type="number" id="msVar" value="11.97" step="0.01" readonly tabindex="-1">
         </div>
       </div>
     </div>
@@ -209,17 +262,17 @@
           <label id="lblHsdInv">Invoice</label>
           <input type="number" id="hsdInvoice" placeholder="e.g. 95.14" step="0.01">
         </div>
-        <div class="input-group">
-          <label id="lblHsdVat">State VAT %</label>
-          <input type="number" id="hsdVat" value="22.25" step="0.01">
-        </div>
-        <div class="input-group">
-          <label id="lblHsdVar">Var. Comm (₹/KL)</label>
-          <input type="number" id="hsdVar" value="31.06" step="0.01">
-        </div>
         <div class="input-group vol-input">
           <label id="lblHsdVol">Vol (KL) <span class="optional-tag">- Opt</span></label>
           <input type="number" id="hsdVol" placeholder="e.g. 135" step="1">
+        </div>
+        <div class="input-group">
+          <label id="lblHsdVat">State VAT %</label>
+          <input type="number" id="hsdVat" value="22.25" step="0.01" readonly tabindex="-1">
+        </div>
+        <div class="input-group">
+          <label id="lblHsdVar">Var. Comm (₹)</label>
+          <input type="number" id="hsdVar" value="31.06" step="0.01" readonly tabindex="-1">
         </div>
       </div>
     </div>
@@ -263,16 +316,42 @@
 </div>
 
 <script>
+const stateVatRates = {
+  "AP": { ms: 31.00, hsd: 22.25 },
+  "TS": { ms: 35.20, hsd: 27.00 },
+  "KA": { ms: 25.92, hsd: 14.34 },
+  "TN": { ms: 34.00, hsd: 25.00 },
+  "MH": { ms: 26.00, hsd: 24.00 },
+  "DL": { ms: 19.40, hsd: 16.75 },
+  "UP": { ms: 19.36, hsd: 17.08 }
+};
+
+function updateStateVat() {
+  const selectedState = document.getElementById('stateSelect').value;
+  const rates = stateVatRates[selectedState];
+  
+  if (rates) {
+    document.getElementById('msVat').value = rates.ms.toFixed(2);
+    document.getElementById('hsdVat').value = rates.hsd.toFixed(2);
+  }
+  
+  // If results exist, recalculate automatically
+  if (document.getElementById("result-container").innerHTML !== "") {
+    calculateMargin();
+  }
+}
+
 const i18n = {
   en: {
     appTitle: "Dealer Margin Calculator",
-    appInstruction: "Enter prices and volume to calculate your exact final margin. The system automatically apportions Business Return Shortfalls and VAT.",
+    appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-locked for accuracy.",
+    lblSelectState: "📍 Select State for VAT:",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "RSP",
     lblInv: "Invoice",
     lblVat: "State VAT %",
-    lblVar: "Var. Comm (₹/KL)",
+    lblVar: "Var. Comm (₹)",
     lblVol: "Vol (KL) <span class='optional-tag'>- Opt</span>",
     btnCalc: "Calculate Margin",
     colDetails: "Breakdown Per Liter",
@@ -295,13 +374,14 @@ const i18n = {
   },
   te: {
     appTitle: "డీలర్ మార్జిన్ కాలిక్యులేటర్",
-    appInstruction: "ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి ధరలు, మరియు వాల్యూమ్‌ను నమోదు చేయండి. సిస్టమ్ ఆటోమేటిక్‌గా వ్యాపార రిటర్న్ మరియు VAT ని లెక్కిస్తుంది.",
+    appInstruction: "ఖచ్చితమైన తుది మార్జిన్‌ను లెక్కించడానికి ధరలు మరియు వాల్యూమ్‌ను నమోదు చేయండి. VAT ఆటోమేటిక్‌గా లాక్ చేయబడింది.",
+    lblSelectState: "📍 VAT కోసం రాష్ట్రాన్ని ఎంచుకోండి:",
     lblPetrol: "🚗 పెట్రోల్ (MS)",
     lblDiesel: "🚛 డీజిల్ (HSD)",
     lblRsp: "RSP",
     lblInv: "ఇన్వాయిస్",
     lblVat: "State VAT %",
-    lblVar: "Var. Comm (₹/KL)",
+    lblVar: "Var. Comm (₹)",
     lblVol: "వాల్యూమ్ (KL) <span class='optional-tag'>- ఐచ్ఛికం</span>",
     btnCalc: "మార్జిన్ లెక్కించు",
     colDetails: "లీటరుకు వివరాలు",
@@ -333,6 +413,7 @@ function switchLanguage() {
   document.getElementById('langToggle').innerText = currentLang === 'en' ? 'తెలుగు' : 'English';
   document.getElementById('appTitle').innerText = t.appTitle;
   document.getElementById('appInstruction').innerText = t.appInstruction;
+  document.getElementById('lblSelectState').innerText = t.lblSelectState;
   document.getElementById('lblPetrol').innerText = t.lblPetrol;
   document.getElementById('lblDiesel').innerText = t.lblDiesel;
   
@@ -379,20 +460,17 @@ function calculateMargin() {
   let netDmA_hsd = diffHsd - lfrA_hsd;
   let netDmB_hsd = diffHsd - lfrB_hsd;
 
-  // Credit Note Variable Initialization
   let cn_ms_total = 0;
   let cn_hsd_total = 0;
   let cn_ms_pl = 0;
   let cn_hsd_pl = 0;
 
   if (totalVol > 0) {
-    // 1. Business Return Base Generation
     const baseMS = msVol * 201.76;
     const baseHSD = hsdVol * 149.46;
     const baseTotal = baseMS + baseHSD;
     let totalBR = baseTotal;
 
-    // Determine Required Slab
     if (totalVol <= 25) totalBR = Math.max(12000, baseTotal);
     else if (totalVol <= 50) totalBR = Math.max(20000, baseTotal);
     else if (totalVol <= 100) totalBR = Math.max(24000, baseTotal);
@@ -403,13 +481,11 @@ function calculateMargin() {
     let br_ms_shortfall_total = 0;
     let br_hsd_shortfall_total = 0;
 
-    // Apportion Shortfall strictly based on Volume Ratio
     if (br_shortfall > 0 && totalVol > 0) {
         br_ms_shortfall_total = br_shortfall * (msVol / totalVol);
         br_hsd_shortfall_total = br_shortfall * (hsdVol / totalVol);
     }
 
-    // 2. Manpower Component
     let slab_ms_rate = 0, slab_hsd_rate = 0;
     const slabs = [
       { limit: 400, ms: 379.67, hsd: 281.23 }, { limit: 600, ms: 340.19, hsd: 251.99 },
@@ -428,24 +504,19 @@ function calculateMargin() {
     let mp_ms_total = msVol * slab_ms_rate;
     let mp_hsd_total = hsdVol * slab_hsd_rate;
 
-    // 3. Variable Commission Component (Based on Input Field per KL)
     let var_ms_total = msVol * msVar;
     let var_hsd_total = hsdVol * hsdVar;
 
-    // 4. Calculate Total Base YRSV
     let yrsv_ms = mp_ms_total + br_ms_shortfall_total + var_ms_total;
     let yrsv_hsd = mp_hsd_total + br_hsd_shortfall_total + var_hsd_total;
 
-    // 5. Add State VAT for Final Credit Note
     cn_ms_total = yrsv_ms * (1 + (msVat / 100));
     cn_hsd_total = yrsv_hsd * (1 + (hsdVat / 100));
 
-    // Convert Final CN back to per liter for table breakdown
     if (msVol > 0) cn_ms_pl = cn_ms_total / (msVol * 1000);
     if (hsdVol > 0) cn_hsd_pl = cn_hsd_total / (hsdVol * 1000);
   }
 
-  // Monthly LFR Deductions
   let totalLfrA_ms = msVol * lfrA_ms * 1000;
   let totalLfrB_ms = msVol * lfrB_ms * 1000;
   let totalLfrA_hsd = hsdVol * lfrA_hsd * 1000;
@@ -502,7 +573,6 @@ function calculateMargin() {
   
   html += `</table></div>`;
 
-  // New Summary Table at the bottom if volumes are entered
   if (totalVol > 0) {
       html += `<div class="card result-wrapper" style="margin-top: 20px;">
         <div class="section-title" style="margin-bottom: 12px;">${t.lblSummaryTitle}</div>
@@ -530,6 +600,9 @@ function calculateMargin() {
   document.getElementById("result-container").innerHTML = html;
   document.getElementById("btnPrint").style.display = "inline-block";
 }
+
+// Initialize on load
+updateStateVat();
 </script>
 
 </body>
