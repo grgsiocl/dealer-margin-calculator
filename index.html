@@ -178,18 +178,31 @@
   .text-info { color: var(--primary); }
   .final-row td { font-size: 15px; font-weight: 700; background-color: #fafafa; }
   
-  .footer-links { text-align: center; margin-top: 20px; }
+  .footer-links { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
   .footer-links a, .footer-links button { 
     display: inline-block; 
-    background: none; 
+    background: #e5e5ea; 
     border: none; 
-    color: var(--text-muted); 
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--text-main); 
     font-size: 13px; 
+    font-weight: 600;
     text-decoration: none; 
     cursor: pointer; 
-    margin: 0 10px; 
+    transition: background-color 0.2s;
   }
-  .footer-links a:hover, .footer-links button:hover { color: var(--text-main); }
+  .footer-links a:hover, .footer-links button:hover { background-color: #d1d1d6; }
+
+  .disclaimer {
+    font-size: 10px;
+    color: #a1a1a6;
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    line-height: 1.5;
+  }
 
   @media print {
     body { background-color: #fff; padding: 0; }
@@ -313,13 +326,16 @@
   <div id="result-container"></div>
   
   <div class="footer-links no-print">
-    <button id="btnPrint" style="display: none;" onclick="window.print()">🖨️ Print Report</button>
+    <button id="btnPrint" onclick="window.print()">🖨️ Print / Download</button>
     <a href="mailto:kishore.kumar.m@live.com?subject=Dealer Margin Calculator">✉️ Report Issue</a>
+  </div>
+
+  <div class="disclaimer no-print">
+    <strong>Disclaimer:</strong> This tool is provided for informational purposes only. While every effort has been made to ensure accuracy based on standard OMC pricing logic and slab structures, actual credit notes and final margins may vary due to dynamic backend pricing, changing tax laws, and specific OMC policies. The developer assumes no liability for business decisions made based on these calculations. If you utilize, share, or reproduce this calculation methodology or software tool in any format, strict and visible credit must be given to the original author (Kishore Kumar Maistry).
   </div>
 </div>
 
 <script>
-// VAT Rates dictionary. Replace placeholders with exact rates if required.
 const stateVatRates = {
   "AN": { ms: 20.00, hsd: 20.00 },
   "AP": { ms: 31.00, hsd: 22.25 },
@@ -657,7 +673,6 @@ function calculateMargin() {
   }
 
   document.getElementById("result-container").innerHTML = html;
-  document.getElementById("btnPrint").style.display = "inline-block";
 }
 
 // Initialize on load
