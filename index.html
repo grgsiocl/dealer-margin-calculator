@@ -170,7 +170,7 @@
       <button id="langToggle" class="lang-btn" onclick="switchLanguage()">తెలుగు</button>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. The system automatically calculates Manpower, Business Return Shortfalls, and State VAT.</p>
+    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. The system automatically apportions Business Return Shortfalls and VAT.</p>
     
     <div class="fuel-section">
       <div class="section-title" id="lblPetrol">🚗 Petrol (MS)</div>
@@ -266,7 +266,7 @@
 const i18n = {
   en: {
     appTitle: "Dealer Margin Calculator",
-    appInstruction: "Enter prices and volume to calculate your exact final margin. The system automatically calculates Manpower, Business Return Shortfalls, and State VAT.",
+    appInstruction: "Enter prices and volume to calculate your exact final margin. The system automatically apportions Business Return Shortfalls and VAT.",
     lblPetrol: "🚗 Petrol (MS)",
     lblDiesel: "🚛 Diesel (HSD)",
     lblRsp: "RSP",
@@ -283,10 +283,14 @@ const i18n = {
     txtNet: "Net Daily Margin",
     txtCnPerLit: "Credit Note Margin (Inc. VAT)",
     txtFinal: "Final Total Margin",
-    txtCn: "Expected Total Credit Note (₹)",
+    txtCn: "Expected Credit Note (₹)",
     txtTotalLfr: "Total Monthly LFR Deduction (₹)",
     msgNoVol: "Volume omitted. Showing daily margins only.",
-    msgVol: "Dynamic credit notes and monthly totals calculated for combined volume of",
+    msgVol: "Dynamic credit notes calculated for combined volume of",
+    lblSummaryTitle: "Monthly Combined Summary",
+    txtTotalCn: "Total Combined Credit Note (MS + HSD)",
+    txtTotalLfrA: "Total LFR Deduction (A-Site)",
+    txtTotalLfrB: "Total LFR Deduction (B-Site)",
     txtEnterVol: "Enter Vol"
   },
   te: {
@@ -309,9 +313,13 @@ const i18n = {
     txtCnPerLit: "క్రెడిట్ నోట్ మార్జిన్ (VAT తో)",
     txtFinal: "తుది మార్జిన్",
     txtCn: "ఎక్స్‌పెక్టెడ్ క్రెడిట్ నోట్ (₹)",
-    txtTotalLfr: "మొత్తం నెలవారీ LFR తగ్గింపు (₹)",
+    txtTotalLfr: "నెలవారీ LFR తగ్గింపు (₹)",
     msgNoVol: "వాల్యూమ్ ఇవ్వబడలేదు. రోజువారీ మార్జిన్ మాత్రమే.",
     msgVol: "మొత్తం వాల్యూమ్ ఆధారంగా గణనలు:",
+    lblSummaryTitle: "నెలవారీ సారాంశం",
+    txtTotalCn: "మొత్తం క్రెడిట్ నోట్ (MS + HSD)",
+    txtTotalLfrA: "మొత్తం LFR తగ్గింపు (A-సైట్)",
+    txtTotalLfrB: "మొత్తం LFR తగ్గింపు (B-సైట్)",
     txtEnterVol: "వాల్యూమ్ ఇవ్వండి"
   }
 };
@@ -395,10 +403,10 @@ function calculateMargin() {
     let br_ms_shortfall_total = 0;
     let br_hsd_shortfall_total = 0;
 
-    // Apportion Shortfall
-    if (br_shortfall > 0 && baseTotal > 0) {
-        br_ms_shortfall_total = br_shortfall * (baseMS / baseTotal);
-        br_hsd_shortfall_total = br_shortfall * (baseHSD / baseTotal);
+    // Apportion Shortfall strictly based on Volume Ratio
+    if (br_shortfall > 0 && totalVol > 0) {
+        br_ms_shortfall_total = br_shortfall * (msVol / totalVol);
+        br_hsd_shortfall_total = br_shortfall * (hsdVol / totalVol);
     }
 
     // 2. Manpower Component
@@ -442,6 +450,10 @@ function calculateMargin() {
   let totalLfrB_ms = msVol * lfrB_ms * 1000;
   let totalLfrA_hsd = hsdVol * lfrA_hsd * 1000;
   let totalLfrB_hsd = hsdVol * lfrB_hsd * 1000;
+  
+  let combinedLfrA = totalLfrA_ms + totalLfrA_hsd;
+  let combinedLfrB = totalLfrB_ms + totalLfrB_hsd;
+  let combinedCN = cn_ms_total + cn_hsd_total;
 
   function fmt(num) {
     return (num < 0 ? "-" : "") + "₹" + Math.abs(num).toFixed(4);
@@ -489,6 +501,31 @@ function calculateMargin() {
   }
   
   html += `</table></div>`;
+
+  // New Summary Table at the bottom if volumes are entered
+  if (totalVol > 0) {
+      html += `<div class="card result-wrapper" style="margin-top: 20px;">
+        <div class="section-title" style="margin-bottom: 12px;">${t.lblSummaryTitle}</div>
+        <table style="border: none;">
+          <tr>
+            <th style="background: none; border-bottom: 2px solid var(--border-color); text-align: left;">Description</th>
+            <th style="background: none; border-bottom: 2px solid var(--border-color); text-align: right;">Amount</th>
+          </tr>
+          <tr>
+            <td class="row-title">${t.txtTotalCn}</td>
+            <td class="text-success" style="font-weight: 800; font-size: 16px;">₹${Math.round(combinedCN).toLocaleString('en-IN')}</td>
+          </tr>
+          <tr>
+            <td class="row-title">${t.txtTotalLfrA}</td>
+            <td class="text-danger" style="font-weight: 600;">₹${Math.round(combinedLfrA).toLocaleString('en-IN')}</td>
+          </tr>
+          <tr>
+            <td class="row-title">${t.txtTotalLfrB}</td>
+            <td class="text-danger" style="font-weight: 600;">₹${Math.round(combinedLfrB).toLocaleString('en-IN')}</td>
+          </tr>
+        </table>
+      </div>`;
+  }
 
   document.getElementById("result-container").innerHTML = html;
   document.getElementById("btnPrint").style.display = "inline-block";
