@@ -135,7 +135,7 @@
   
   .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
   
-  .input-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
+  .input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
   
   @media (max-width: 650px) {
       .input-grid { grid-template-columns: repeat(2, 1fr); }
@@ -253,7 +253,7 @@
       </select>
     </div>
     
-    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-filled but remain fully editable for accuracy.</p>
+    <p class="instruction" id="appInstruction">Enter prices and volume to calculate your exact final margin. State VAT is auto-filled but remains fully editable for accuracy.</p>
     
     <div class="settings-wrapper">
       <div class="settings-bar">
@@ -320,9 +320,9 @@
           <label id="lblMsVat">State VAT %</label>
           <input type="number" id="msVat" class="user-input editable-highlight" value="0.00" step="0.01" disabled>
         </div>
-        <div class="input-group">
+        <div class="input-group" style="display: none;">
           <label id="lblMsVar">Var. Comm (₹)</label>
-          <input type="number" id="msVar" class="user-input editable-highlight" value="11.97" step="0.01" disabled>
+          <input type="number" id="msVar" value="11.97" step="0.01">
         </div>
       </div>
     </div>
@@ -346,9 +346,9 @@
           <label id="lblHsdVat">State VAT %</label>
           <input type="number" id="hsdVat" class="user-input editable-highlight" value="0.00" step="0.01" disabled>
         </div>
-        <div class="input-group">
+        <div class="input-group" style="display: none;">
           <label id="lblHsdVar">Var. Comm (₹)</label>
-          <input type="number" id="hsdVar" class="user-input editable-highlight" value="31.06" step="0.01" disabled>
+          <input type="number" id="hsdVar" value="31.06" step="0.01">
         </div>
       </div>
     </div>
@@ -439,7 +439,7 @@ function updateStateVat() {
 const i18n = {
   en: {
     appTitle: "LFR & Variable Dealer Margin Estimator",
-    appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT and variable commissions are auto-filled but remain fully editable for accuracy.",
+    appInstruction: "Enter prices and volume to calculate your exact final margin. State VAT is auto-filled but remains fully editable for accuracy.",
     lblSelectState: "📍 Select State / UT for VAT:",
     txtStateWarning: "⚠️ Please select your State / UT to enable the calculator inputs.",
     lblPetrol: "🚗 Petrol (MS)",
@@ -447,7 +447,6 @@ const i18n = {
     lblRsp: "RSP",
     lblInv: "Invoice",
     lblVat: "State VAT %",
-    lblVar: "Var. Comm (₹)",
     lblVol: "Vol (KL) <span class='optional-tag'>- Opt</span>",
     btnCalc: "Calculate Margin",
     colDetails: "Breakdown Per Liter",
@@ -478,7 +477,6 @@ const i18n = {
     lblRsp: "RSP",
     lblInv: "ఇన్వాయిస్",
     lblVat: "State VAT %",
-    lblVar: "Var. Comm (₹)",
     lblVol: "వాల్యూమ్ (KL) <span class='optional-tag'>- ఐచ్ఛికం</span>",
     btnCalc: "మార్జిన్ లెక్కించు",
     colDetails: "లీటరుకు వివరాలు",
@@ -501,7 +499,7 @@ const i18n = {
   },
   hi: {
     appTitle: "LFR और वेरिएबल डीलर मार्जिन एस्टीमेटर",
-    appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट और परिवर्तनीय कमीशन भरे हुए हैं लेकिन आप उन्हें बदल सकते हैं।",
+    appInstruction: "अपना सटीक अंतिम मार्जिन की गणना करने के लिए मूल्य और मात्रा दर्ज करें। राज्य वैट भरा हुआ है लेकिन आप उसे बदल सकते हैं।",
     lblSelectState: "📍 वैट के लिए राज्य / केंद्र शासित प्रदेश चुनें:",
     txtStateWarning: "⚠️ कैलकुलेटर को सक्षम करने के लिए कृपया अपना राज्य / केंद्र शासित प्रदेश चुनें।",
     lblPetrol: "🚗 पेट्रोल (MS)",
@@ -509,7 +507,6 @@ const i18n = {
     lblRsp: "आरएसपी (RSP)",
     lblInv: "चालान (Invoice)",
     lblVat: "राज्य वैट %",
-    lblVar: "वेरिएबल कमीशन (₹)",
     lblVol: "मात्रा (KL) <span class='optional-tag'>- वैकल्पिक</span>",
     btnCalc: "मार्जिन की गणना करें",
     colDetails: "प्रति लीटर विवरण",
@@ -548,7 +545,6 @@ function switchLanguage() {
   document.querySelectorAll('#lblMsRsp, #lblHsdRsp').forEach(el => el.innerHTML = t.lblRsp);
   document.querySelectorAll('#lblMsInv, #lblHsdInv').forEach(el => el.innerHTML = t.lblInv);
   document.querySelectorAll('#lblMsVat, #lblHsdVat').forEach(el => el.innerHTML = t.lblVat);
-  document.querySelectorAll('#lblMsVar, #lblHsdVar').forEach(el => el.innerHTML = t.lblVar);
   document.querySelectorAll('#lblMsVol, #lblHsdVol').forEach(el => el.innerHTML = t.lblVol);
   
   document.getElementById('btnCalculate').innerText = t.btnCalc;
