@@ -364,11 +364,11 @@ function calculateMargin() {
 
   let totalVol = msVol + hsdVol;
 
-  // LFR deduction logic with uniform 18% GST across all sites
+  // LFR deduction logic: A-Site + 18% GST, B-Site inclusive of GST
   const lfrA_ms = (443.50 * 1.18) / 1000;
   const lfrA_hsd = (369.58 * 1.18) / 1000;
-  const lfrB_ms = (184.34 * 1.18) / 1000;
-  const lfrB_hsd = (153.62 * 1.18) / 1000;
+  const lfrB_ms = 235.96 / 1000;
+  const lfrB_hsd = 196.63 / 1000;
 
   // Daily Gross and Net Margins
   let diffMs = msRsp - msInv;
